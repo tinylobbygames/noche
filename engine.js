@@ -5,7 +5,9 @@
 const LANGS = ['en', 'uk', 'es'];
 // 09.10.2026: first visit follows the browser language (Spanish viewers came from Spanish Shorts and saw English); a choice in settings still wins
 const browserLang = (typeof navigator !== 'undefined' && (navigator.languages || [navigator.language]).map((l) => String(l || '').slice(0, 2).toLowerCase()).find((l) => ['en', 'uk', 'es'].includes(l))) || 'en';
-let LANG = localStorage.getItem('lc_lang') || browserLang;
+// 22.10: links from Spanish Shorts carry ?lang=es (the direct GitHub Pages address); a saved choice in settings still wins
+const urlLang = (typeof location !== 'undefined' && new URLSearchParams(location.search).get('lang')) || '';
+let LANG = localStorage.getItem('lc_lang') || urlLang || browserLang;
 if (!LANGS.includes(LANG)) LANG = 'en';
 // Player gender (chosen on the title screen). Story strings may contain {masculine|feminine} forms; G() resolves them.
 let GENDER = localStorage.getItem('lc_gender') || 'f';

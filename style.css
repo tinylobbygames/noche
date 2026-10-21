@@ -1,0 +1,377 @@
+:root {
+    --bg: #0e0b12;
+    --bar: #1a1420;
+    --panel: #221a2b;
+    --neon: #ff5c8a;
+    --amber: #f2b34c;
+    --text: #e8e0ea;
+    --muted: #aba1b3;
+    --fs: 19px; /* dialogue size; the title screen offers 17 / 19 / 22 */
+    --danger: #ff6b6b;
+    --ok: #7ad38f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  }
+  #app { width: 100%; max-width: 760px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+
+  header { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; }
+  header .title { white-space: nowrap; color: var(--neon); font-weight: 600; letter-spacing: 2px; text-shadow: 0 0 12px var(--neon); }
+  header .stats { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 16px; }
+  header .stat, #night-tag { white-space: nowrap; }
+  #lang, #voice, #audio, #music { flex-shrink: 0; }
+  #settings-btn { background: none; border: 1px solid var(--muted); border-radius: 4px; color: var(--text, #e8e0ea); font-size: 16px; line-height: 1; padding: 4px 8px; cursor: pointer; }
+  #settings-btn:hover, #settings-btn[aria-expanded="true"] { border-color: var(--amber); color: var(--amber); }
+  #settings { position: absolute; right: 0; top: calc(100% + 8px); z-index: 50; width: min(380px, calc(100vw - 32px));
+    background: #1a1420; border: 1px solid #3a2d48; border-radius: 10px; padding: 14px 16px; box-shadow: 0 14px 40px rgba(0,0,0,.6);
+    display: flex; flex-direction: column; gap: 12px; animation: set-in .18s ease-out; }
+  @keyframes set-in { from { opacity: 0; transform: translateY(-6px); } }
+  #settings .set-row, #settings .gender { display: flex; font-family: 'IBM Plex Mono', monospace; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 0; justify-content: flex-start; }
+  #settings .set-row > span:first-child, #settings .gender > span:first-child { width: 100%; color: var(--muted); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  #set-home { align-self: stretch; margin-top: 2px; padding: 8px 12px; background: none; border: 1px solid var(--amber); color: var(--amber); border-radius: 6px; font-family: inherit; font-size: 14px; cursor: pointer; }
+  #set-home:hover { background: rgba(242,179,76,.12); }
+  #set-dyn { display: flex; flex-direction: column; gap: 12px; }
+  #settings .set-sound button small { font-size: 12px; font-family: inherit; color: inherit; }
+  #settings #voice, #settings #audio, #settings #music { color: var(--text, #e8e0ea); padding: 4px 9px; font-size: 13px; }
+  .stat b { color: var(--amber); }
+  .stat small { color: var(--muted); font-size: 12px; }
+  .stat.trouble b { color: var(--danger); }
+  #lang { display: inline-flex; flex-shrink: 0; border: 1px solid var(--muted); border-radius: 4px; overflow: hidden; }
+  #lang button { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 13px; padding: 3px 8px; cursor: pointer; }
+  #lang button + button { border-left: 1px solid var(--muted); }
+  #lang button.active { background: var(--neon); color: #1a0a10; font-weight: 600; }
+  #voice, #audio, #music { background: none; border: 1px solid var(--muted); border-radius: 4px; padding: 2px 7px; cursor: pointer; font-size: 14px; opacity: .45; }
+  #voice.on, #audio.on, #music.on { opacity: 1; border-color: var(--amber); }
+
+  #scene {
+    background: linear-gradient(180deg, rgba(14,11,18,.15) 0%, rgba(14,11,18,.35) 60%, rgba(14,11,18,.85) 100%), url('art/bg-lobby.jpg') center 35% / cover no-repeat, var(--bar);
+    border-radius: 12px; height: 330px; position: relative; overflow: hidden;
+    display: flex; align-items: flex-end; justify-content: center;
+    border: 1px solid #332740;
+  }
+  #scene::before {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 44px;
+    background: linear-gradient(180deg, #4a3522, #2a1c10); border-top: 3px solid #7a5a35; box-shadow: 0 -10px 30px rgba(0,0,0,.5);
+  }
+  .neon-sign { display: none; } /* the lobby art has its own VACANCY sign */
+  .neon-sign {
+    position: absolute; top: 18px; left: 24px; font-family: 'IBM Plex Mono', monospace;
+    color: var(--neon); font-size: 18px; text-shadow: 0 0 10px var(--neon), 0 0 30px var(--neon);
+    opacity: .85; animation: flicker 4s infinite;
+  }
+  @keyframes flicker { 0%,95%,100% { opacity:.85 } 96% { opacity:.3 } 97% { opacity:.85 } 98% { opacity:.4 } }
+  .clock { position: absolute; top: 18px; right: 24px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); }
+
+  #scene .guest { position: relative; margin-bottom: 40px; width: 210px; height: 250px; transition: transform .4s, opacity .4s; }
+  #scene .guest.enter { animation: walkin .6s ease-out; }
+  @keyframes walkin { from { transform: translateX(120px); opacity: 0 } to { transform: none; opacity: 1 } }
+  #scene .guest svg { width: 100%; height: 100%; }
+  #scene .guest img.art { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; border-radius: 10px; box-shadow: 0 0 40px rgba(0,0,0,.7), 0 0 0 1px #332740; }
+  #scene .guest .name-tag {
+    position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+    background: var(--panel); padding: 3px 10px; border-radius: 4px; font-size: 13px; white-space: nowrap; color: var(--amber);
+  }
+
+  #dialog {
+    background: var(--panel); border-radius: 12px; padding: 18px 20px; min-height: 120px;
+    border: 1px solid #332740; font-size: var(--fs); line-height: 1.55;
+  }
+  #dialog .speaker { color: var(--amber); font-family: 'IBM Plex Mono', monospace; font-size: 13px; margin-bottom: 6px; }
+  #dialog .speaker.you { color: var(--neon); }
+  #dialog .speaker.narr { color: var(--muted); }
+  #dialog .line { white-space: pre-wrap; }
+
+  #choices { display: flex; flex-direction: column; gap: 8px; }
+  #choices button {
+    text-align: left; background: var(--bar); color: var(--text); border: 1px solid #3d2f4a;
+    padding: 12px 16px; border-radius: 8px; font-family: inherit; font-size: calc(var(--fs) - 2px); cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  #choices button:hover { border-color: var(--neon); background: #2a1f33; }
+  #choices button.next { border-color: var(--amber); color: var(--amber); text-align: center; }
+  .delta { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); margin-left: 8px; }
+  .delta.plus { color: var(--ok); } .delta.minus { color: var(--danger); }
+
+  #toasts { position: fixed; top: 60px; left: 16px; right: 16px; z-index: 10000; display: flex; flex-wrap: nowrap; justify-content: center; align-items: flex-start; gap: 8px; pointer-events: none; }
+  #toasts .toast { min-width: 0; flex: 0 1 auto; }
+  @media (max-width: 600px) { #toasts .toast { font-size: 12px; padding: 6px 10px; } }
+  .toast {
+    text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,.5);
+    background: var(--panel); border: 1px solid var(--amber); color: var(--amber);
+    padding: 8px 16px; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+    animation: toast 1.8s forwards; pointer-events: none;
+  }
+  .toast.bad { border-color: var(--danger); color: var(--danger); }
+  @keyframes toast { 0% { opacity:0; transform: translateY(-8px) } 15%,80% { opacity:1; transform: none } 100% { opacity:0 } }
+
+  .ending { text-align: center; }
+  .ending h2 { color: var(--neon); font-family: 'IBM Plex Mono', monospace; letter-spacing: 2px; }
+  footer { color: var(--muted); font-size: 12px; text-align: center; font-family: 'IBM Plex Mono', monospace; }
+
+/* ---------- title screen ---------- */
+#night-tag { font-family: 'IBM Plex Mono', monospace; color: var(--muted); font-size: 13px; }
+#title { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 120px 16px 60px; text-align: center; border-radius: 12px; border: 1px solid #332740;
+  background: linear-gradient(180deg, rgba(14,11,18,.35), rgba(14,11,18,.9)), url('art/bg-title.jpg') center 40% / cover no-repeat, var(--bar); }
+.t-neon {
+  font-family: 'IBM Plex Mono', monospace; font-size: clamp(36px, 9vw, 64px); letter-spacing: 6px; color: var(--neon);
+  text-shadow: 0 0 12px var(--neon), 0 0 40px var(--neon); animation: flicker 5s infinite;
+}
+#t-tagline { color: var(--muted); max-width: 420px; line-height: 1.5; margin: 0; }
+#t-buttons { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 360px; }
+#t-buttons button {
+  background: var(--bar); color: var(--text); border: 1px solid #3d2f4a; padding: 12px 16px; border-radius: 8px;
+  font-family: inherit; font-size: 15px; cursor: pointer; transition: border-color .15s;
+}
+#t-buttons button:hover { border-color: var(--neon); }
+#t-buttons button.next, #choices button.next { border-color: var(--amber); color: var(--amber); }
+#choices button:disabled { opacity: .6; cursor: default; }
+[hidden] { display: none !important; }
+
+.t-endings { color: var(--amber); font-family: 'IBM Plex Mono', monospace; font-size: 13px; margin: -6px 0 0; }
+.ending .coda { color: var(--muted); font-style: italic; }
+
+.gender { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+#settings .gender button { background: none; border: 1px solid #4a3d58; color: var(--text, #e8e0ea); font-family: 'IBM Plex Mono', monospace; cursor: pointer; padding: 4px 12px; font-size: 13px; border-radius: 4px; }
+#settings .gender button:hover { border-color: var(--amber); }
+#settings .gender button.active { background: var(--neon); color: #1a0a10; border-color: var(--neon); font-weight: 600; }
+.t-studio { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 5px; color: var(--muted); margin-bottom: -8px; }
+
+.t-intro { color: var(--text); max-width: 420px; line-height: 1.5; margin: -8px 0 0; font-size: 15px; }
+.t-endings { cursor: pointer; user-select: none; }
+.t-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; width: 100%; max-width: 720px; text-align: left;
+  background: rgba(14,11,18,.55); border: 1px solid #332740; border-radius: 10px; padding: 12px; }
+.g-night h4 { margin: 0 0 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+.g-night ul { list-style: none; margin: 0; padding: 0; }
+.g-night li { font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; letter-spacing: 1px; }
+.g-night li.found { color: var(--amber); }
+.g-night li.locked { color: #4a3f52; }
+
+/* ---------- phones ---------- */
+@media (max-width: 600px) {
+  #app { padding: 10px; gap: 10px; }
+  header { flex-wrap: wrap; gap: 6px; font-size: 12px; }
+  header .stats { gap: 10px; flex-wrap: wrap; }
+  #scene { height: 250px; }
+  #scene .guest { width: 160px; height: 190px; margin-bottom: 36px; }
+  #dialog { font-size: calc(var(--fs) - 1px); padding: 14px 14px; min-height: 100px; }
+  #choices button { font-size: calc(var(--fs) - 3px); padding: 11px 12px; }
+  #title { padding: 70px 12px 40px; }
+  .t-neon { letter-spacing: 3px; }
+  .t-gallery { grid-template-columns: 1fr 1fr; }
+}
+
+.night-card { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace;
+  font-size: 22px; letter-spacing: 6px; text-transform: uppercase; color: var(--amber); background: rgba(14,11,18,.92); opacity: 0; pointer-events: none; transition: opacity .6s; z-index: 2; }
+.night-card.show { opacity: 1; }
+.night-card { flex-direction: column; gap: 10px; }
+.night-card .nc-day { font-size: 13px; letter-spacing: 4px; color: var(--muted); }
+
+/* ---------- credits ---------- */
+.credits { position: relative; height: min(78vh, 720px); overflow: hidden; border-radius: 12px; border: 1px solid #332740; text-align: center;
+  background: linear-gradient(180deg, rgba(14,11,18,.55), rgba(14,11,18,.92)), url('art/bg-title.jpg') center 40% / cover no-repeat, var(--bar); }
+.credits .roll { position: absolute; left: 0; right: 0; top: 18%; padding: 0 16px 90px; }
+/* no animation (reduced motion): the roll is a normal scrollable page */
+.credits.static { overflow-y: auto; } .credits.static .roll { position: static; padding-top: 40px; }
+.credits h2 { font-family: 'IBM Plex Mono', monospace; color: var(--neon); letter-spacing: 6px; font-size: 40px; text-shadow: 0 0 20px var(--neon); margin: 6px 0 40px; }
+.credits h4 { font-family: 'IBM Plex Mono', monospace; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; font-size: 12px; margin: 34px 0 6px; }
+.credits p { margin: 0; line-height: 1.6; }
+.credits p span { color: var(--muted); font-size: 13px; }
+.credits .c-studio { font-family: 'IBM Plex Mono', monospace; letter-spacing: 5px; color: var(--muted); font-size: 12px; }
+.credits .c-thanks { margin-top: 60px; color: var(--amber); }
+.credits .c-ifdb { margin-top: 14px; font-size: calc(var(--fs) - 3px); }
+.credits .c-ifdb a { color: var(--muted, #aba1b3); text-decoration: underline; text-underline-offset: 3px; }
+.credits .c-ifdb a:hover { color: var(--neon); }
+.credits .c-last { margin: 80px 0 40px; font-family: 'IBM Plex Mono', monospace; color: var(--neon); letter-spacing: 2px; }
+.credits .c-back { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); background: var(--bar); color: var(--amber); border: 1px solid var(--amber);
+  padding: 10px 18px; border-radius: 8px; font-family: inherit; cursor: pointer; }
+.credits::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(180deg, transparent, #0e0b12 70%); pointer-events: none; z-index: 1; }
+.credits::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 60px; background: linear-gradient(0deg, transparent, #0e0b12); pointer-events: none; z-index: 1; }
+.credits .c-back { z-index: 2; }
+
+/* ---------- morning ---------- */
+.morning h2 { font-family: 'IBM Plex Mono', monospace; color: var(--amber); letter-spacing: 3px; text-transform: uppercase; font-size: 18px; margin: 0 0 8px; }
+.morning p { margin: 0 0 6px; color: var(--muted); }
+.morning .m-pocket { color: var(--text); font-family: 'IBM Plex Mono', monospace; }
+.morning .m-pocket b { color: var(--amber); }
+#choices button.m-item { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left; }
+.m-item .m-title { font-weight: 600; }
+.m-item .m-price { font-family: 'IBM Plex Mono', monospace; color: var(--amber); white-space: nowrap; }
+.m-item .m-desc { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
+#choices button.m-item:disabled { opacity: .5; }
+body.is-morning #s-cash, body.is-morning #s-trouble, body.is-morning #clock { visibility: hidden; }
+
+/* ---------- living scene ---------- */
+#scene .fx { position: absolute; inset: 0; pointer-events: none; }
+#scene .guest { z-index: 1; }
+#scene .night-card { z-index: 3; }
+#scene .clock { z-index: 2; }
+/* rain on the glass: two layers of thin streaks drifting down at different speeds */
+#scene .rain { opacity: 0; transition: opacity 2.5s ease; mix-blend-mode: screen; inset: auto; border-radius: 2px;
+  background-image:
+    repeating-linear-gradient(100deg, transparent 0 18px, rgba(200,190,255,.35) 18px 19px, transparent 19px 46px),
+    repeating-linear-gradient(97deg, transparent 0 31px, rgba(200,190,255,.22) 31px 32px, transparent 32px 70px);
+  background-size: 100% 180px, 100% 260px; animation: rain 1.4s linear infinite; }
+#scene.raining .rain { opacity: .18; transition-duration: 1.2s; }
+#scene.dry .rain { display: none; }
+@keyframes rain { to { background-position: -30px 180px, -40px 260px; } }
+/* the floor lamp on the left breathes; now and then it stutters */
+#scene .lamp-glow { background: radial-gradient(circle at 17% 62%, rgba(242,179,76,.3), transparent 22%); mix-blend-mode: screen; animation: lamp 7s infinite; }
+@keyframes lamp { 0%,100% { opacity: .85 } 40% { opacity: 1 } 62% { opacity: .9 } 63% { opacity: .35 } 64% { opacity: .95 } 66% { opacity: .5 } 67% { opacity: 1 } }
+/* the VACANCY sign buzzes */
+#scene .neon-glow { background: radial-gradient(ellipse 8% 6% at 70.4% 34%, rgba(255,92,138,.5), transparent 70%); mix-blend-mode: screen; animation: neon 5.3s infinite; }
+@keyframes neon { 0%,100% { opacity: .9 } 81% { opacity: .9 } 82% { opacity: .1 } 83% { opacity: .8 } 85% { opacity: .15 } 86% { opacity: .95 } }
+/* portrait: a slow push-in plus a slow horizontal drift; dims when the narrator talks, lifts when the guest speaks.
+   19.10: the old vertical 5.5s 'breathe' read as jitter to a player on intfiction; replaced with a wide, slow sway. */
+#scene .guest .frame { width: 100%; height: 100%; overflow: hidden; border-radius: 10px; box-shadow: 0 0 40px rgba(0,0,0,.7), 0 0 0 1px #332740;
+  animation: breathe 14s ease-in-out infinite; transition: filter .6s, box-shadow .6s; }
+#scene .guest.object .frame { animation: none; }
+#scene .guest .frame img.art { border-radius: 0; box-shadow: none; animation: pushin 22s ease-out forwards; transform-origin: 50% 30%; }
+@keyframes breathe { 0%,100% { transform: translateX(-3px) } 50% { transform: translateX(3px) } }
+@keyframes pushin { from { transform: scale(1) } to { transform: scale(1.07) } }
+#scene .guest.listening .frame { filter: brightness(.72) saturate(.85); }
+#scene .guest.speaking .frame { filter: brightness(1.04); box-shadow: 0 0 46px rgba(242,179,76,.22), 0 0 0 1px #5a4630; }
+#scene .guest.leave { animation: walkout .38s ease-in forwards; }
+@keyframes walkout { to { transform: translateX(-90px); opacity: 0 } }
+#scene .guest.ringing .frame { animation: ringshake .12s linear 0s 8, breathe 14s ease-in-out .96s infinite; }
+@keyframes ringshake { 0%,100% { transform: translateX(0) rotate(0) } 25% { transform: translateX(-3px) rotate(-1deg) } 75% { transform: translateX(3px) rotate(1deg) } }
+/* trouble: the room flinches and goes red at the edges; money: the register glints */
+#scene .hit-vignette { opacity: 0; box-shadow: inset 0 0 90px 20px rgba(255,60,80,.55); z-index: 2; }
+#scene.hit { animation: flinch .35s ease-out; }
+#scene.hit .hit-vignette { animation: redflash .7s ease-out; }
+@keyframes flinch { 20% { transform: translateX(-6px) } 45% { transform: translateX(5px) } 70% { transform: translateX(-2px) } }
+@keyframes redflash { 0% { opacity: 0 } 15% { opacity: 1 } 100% { opacity: 0 } }
+#s-cash.flash b { animation: glint .9s ease-out; }
+#s-cash.flash-bad b, #s-trouble.flash b { animation: glintbad .9s ease-out; }
+@keyframes glint { 0% { text-shadow: none } 25% { text-shadow: 0 0 14px var(--amber), 0 0 4px #fff; transform: scale(1.15) } 100% { text-shadow: none } }
+@keyframes glintbad { 0% { text-shadow: none } 25% { text-shadow: 0 0 14px var(--danger); } 100% { text-shadow: none } }
+.ending .standing { margin-top: 6px; color: var(--amber); opacity: .9; font-size: .95em; }
+.ending .verdict { margin-top: 10px; color: var(--amber); font-weight: 600; }
+.morning .m-goal { color: var(--amber); opacity: .9; font-size: .95em; }
+.stat b { display: inline-block; }
+@media (prefers-reduced-motion: reduce) {
+  #scene .rain, #scene .lamp-glow, #scene .neon-glow, #scene .guest .frame, #scene .guest .frame img.art, #scene.hit, #scene.hit .hit-vignette,
+  #scene .guest.leave, #scene .guest.enter { animation: none !important; }
+}
+
+/* narrator lines are set in italics; everything else is the same size and colour as speech */
+#dialog .line.narr { font-style: italic; }
+
+/* rain only behind the glass: the big window and the door (positions match art/bg-lobby.jpg at center 35% / cover) */
+#scene .rain.w1 { left: 25.7%; top: 14%; width: 29.4%; height: 52.5%; }
+#scene .rain.w2 { left: 64.1%; top: 24.5%; width: 12.7%; height: 51%; }
+.morning .m-pocket b.bad { color: var(--danger); }
+
+/* Sal forgets the week */
+.night-card.forget { text-transform: none; letter-spacing: 0; font-size: 16px; padding: 18px; text-align: center; gap: 12px; }
+.night-card .nc-face { width: 92px; height: 110px; object-fit: cover; object-position: center 20%; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,.7); }
+.night-card .nc-quote { max-width: 520px; color: var(--text); font-style: italic; line-height: 1.5; font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+.night-card .nc-wipe { font-size: 20px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+.night-card .nc-wipe s { color: var(--danger); text-decoration-thickness: 3px; }
+.night-card.forget.show .nc-wipe s { animation: strike 1s ease-out .6s both; }
+.night-card .nc-wipe b { color: var(--ok); animation: appear .5s ease-out 1.4s both; }
+@keyframes strike { from { text-decoration-color: transparent } to { text-decoration-color: var(--danger) } }
+@keyframes appear { from { opacity: 0; transform: scale(1.6) } to { opacity: 1; transform: none } }
+.m-pocket b.wiped { animation: wiped 2s ease-out; }
+@keyframes wiped { 0% { color: var(--danger) } 50% { color: var(--ok); text-shadow: 0 0 12px var(--ok) } 100% { } }
+
+/* the last straw: the trouble counter throbs */
+#s-trouble.danger b { color: var(--danger); animation: throb 1.2s ease-in-out infinite; }
+@keyframes throb { 50% { text-shadow: 0 0 12px var(--danger); transform: scale(1.2); } }
+/* fired: the lobby goes cold and red, Sal at the desk, a stamp across the card, the list of what added up */
+#scene.fired-scene { filter: saturate(.55) brightness(.8); }
+#scene.fired-scene .hit-vignette { opacity: 1; animation: none; box-shadow: inset 0 0 120px 30px rgba(255,60,80,.45); }
+#scene.fired-scene .rain, #scene.fired-scene .lamp-glow { display: none; }
+.ending.fired { position: relative; }
+.ending .stamp { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 34px; letter-spacing: 6px; color: var(--danger);
+  border: 4px solid var(--danger); border-radius: 6px; padding: 4px 16px; margin: 4px 0 10px; transform: rotate(-6deg); opacity: .92;
+  animation: stamp .45s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes stamp { from { transform: rotate(-6deg) scale(2.4); opacity: 0 } to { transform: rotate(-6deg) scale(1); opacity: .92 } }
+.ending .why { margin: 10px auto 8px; max-width: 420px; text-align: left; background: rgba(255,107,107,.06); border: 1px solid rgba(255,107,107,.3); border-radius: 8px; padding: 10px 14px; }
+.ending .why h4 { margin: 0 0 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--danger); }
+.ending .why ul { margin: 0; padding-left: 18px; } .ending .why li { font-size: 14px; color: var(--text); }
+/* endings fade up; choices arrive one after another */
+.ending h2, .ending > p, .ending .why { animation: fadeup .7s ease-out both; }
+.ending > p { animation-delay: .25s; } .ending .why { animation-delay: .5s; } .ending .coda { animation-delay: .7s; } .ending .delta { animation-delay: .9s; }
+.ending.fired h2 { animation-delay: .4s; }
+@keyframes fadeup { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
+#choices button.appear { animation: fadeup .35s ease-out both; }
+/* morning: dawn light spills into the lobby */
+body.is-morning #scene::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: linear-gradient(180deg, rgba(255,190,120,.28), rgba(255,160,110,.08) 45%, transparent 70%); mix-blend-mode: screen; animation: dawn 3s ease-out both; }
+body.is-morning #scene .lamp-glow, body.is-morning #scene .neon-glow { opacity: .35; animation: none; }
+@keyframes dawn { from { opacity: 0 } to { opacity: 1 } }
+@media (prefers-reduced-motion: reduce) {
+  #s-trouble.danger b, .ending .stamp, .ending h2, .ending > p, .ending .why, #choices button.appear, body.is-morning #scene::after { animation: none !important; }
+}
+.ending .broke { color: var(--danger); font-style: italic; }
+
+/* phones: no keyboard hint; header buttons compact enough for one row */
+@media (hover: none) { .keys-hint { display: none; } }
+@media (max-width: 600px) {
+  #lang button { padding: 4px 9px; font-size: 13px; }
+  header .stats { gap: 6px 10px; }
+}
+
+/* title: endings progress with milestone marks, archive, lifetime stats */
+.t-bar { display: block; position: relative; height: 4px; width: 220px; margin: 8px auto 0; background: #332740; border-radius: 2px; }
+.t-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--amber); border-radius: 2px; }
+.t-bar b { position: absolute; top: -3px; width: 2px; height: 10px; background: #5a4a66; transform: translateX(-1px); }
+.t-bar b.on { background: var(--neon); box-shadow: 0 0 6px var(--neon); }
+.t-extra { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; width: 100%; max-width: 720px; }
+.t-archive, .t-stats { background: rgba(14,11,18,.6); border: 1px solid #332740; border-radius: 10px; padding: 10px 14px; min-width: 240px; text-align: left; }
+.t-archive h4, .t-stats h4 { margin: 0 0 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.t-archive button { display: block; width: 100%; text-align: left; background: none; border: none; color: var(--amber); font-family: inherit; font-size: 14px; padding: 3px 0; cursor: pointer; }
+.t-archive button:hover { color: var(--neon); }
+.t-archive .locked { display: block; color: #5a4a66; font-size: 13px; padding: 3px 0; } .t-archive .locked small { color: var(--muted); }
+.t-stats ul { list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--muted); } .t-stats b { color: var(--text); font-family: 'IBM Plex Mono', monospace; }
+#t-buttons button.secret { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 18px rgba(255,92,138,.25); animation: throb 2.4s ease-in-out infinite; }
+/* documents and the content note */
+.doc { max-width: 620px; margin: 0 auto; padding: 40px 20px 90px; text-align: left; animation: fadeup .6s ease-out both; }
+.doc h3 { font-family: 'IBM Plex Mono', monospace; color: var(--amber); letter-spacing: 2px; margin: 6px 0 18px; }
+.doc .doc-body p { line-height: 1.7; margin: 0 0 12px; font-size: var(--fs); }
+.credits .doc { position: relative; overflow-y: auto; height: 100%; box-sizing: border-box; }
+/* advisory and "play as" cards reuse the credits box: size them to their text so the button sits right under it
+   (with the fixed credits height "Begin" landed at ~600 px and fell below the fold in itch's embed on laptops) */
+.credits:has(> .doc.advisory) { height: auto; }
+.credits:has(> .doc.advisory) .doc { height: auto; padding-bottom: 28px; }
+.doc.advisory .doc-body p { font-size: calc(var(--fs) + 1px); }
+body.is-menu #s-cash, body.is-menu #s-trouble { display: none; }
+.t-gallery .t-stats { grid-column: 1 / -1; }
+.t-gallery .t-stats ul { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+
+/* first start: who is behind the desk */
+.gender-ask .ga-buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 18px; }
+.gender-ask .ga-buttons button { min-width: 180px; padding: 12px 20px; font-size: var(--fs); background: none; border: 1px solid var(--amber); color: var(--amber); border-radius: 8px; cursor: pointer; font-family: inherit; }
+.gender-ask .ga-buttons button:hover { background: rgba(242,179,76,.12); }
+
+.debt { color: var(--danger) !important; font-weight: 600; }
+
+/* support link: end of the week and credits */
+.support-link { display: block; text-align: center; margin-top: 10px; padding: 12px 18px; border: 1px solid var(--neon); border-radius: 8px; color: var(--neon); text-decoration: none; font-size: calc(var(--fs) - 2px); }
+.support-link:hover { background: rgba(255,92,138,.12); }
+.credits .c-support { position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%); z-index: 2; background: var(--bar); margin: 0; white-space: nowrap; }
+
+/* first start: the "play as" buttons sit under the advisory card, above the bottom fade */
+.credits > .gender-ask { position: relative; z-index: 2; padding: 0 16px 26px; }
+.credits > .gender-ask .ga-buttons { margin-top: 0; }
+.doc.advisory .ga-hint { margin-top: 12px; color: var(--muted); }
+
+/* the clerk's notebook (📓 next to ⚙): who came and what you said */
+#notebook-btn { background: none; border: 1px solid var(--muted); border-radius: 4px; font-size: 15px; line-height: 1; padding: 4px 7px; cursor: pointer; }
+#notebook-btn:hover, #notebook-btn[aria-expanded="true"] { border-color: var(--amber); }
+#notebook { position: absolute; right: 0; top: calc(100% + 8px); z-index: 50; width: min(420px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow-y: auto;
+  background: #f1e6cc; color: #2a2118; border-radius: 6px; padding: 16px 18px 18px; box-shadow: 0 14px 40px rgba(0,0,0,.6);
+  background-image: repeating-linear-gradient(180deg, transparent 0 25px, rgba(60,90,140,.18) 25px 26px); animation: set-in .18s ease-out; font-family: 'IBM Plex Sans', sans-serif; }
+#notebook h4 { margin: 0 0 6px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #7a2a3a; }
+#notebook h5 { margin: 14px 0 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6b5a44; text-transform: uppercase; }
+#notebook ul { list-style: none; margin: 0; padding: 0; }
+#notebook li { padding: 4px 0 6px; line-height: 1.4; font-size: 14px; }
+#notebook li b { display: block; font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: #4a3b2a; }
+#notebook .nb-said { font-style: italic; }
+#notebook li.nb-same { padding-top: 0; }
+#notebook small { margin-left: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; white-space: nowrap; }
+#notebook .nb-cash { color: #2f6b3a; } #notebook .nb-bad { color: #9a2a2a; }
+#notebook .nb-empty { margin: 8px 0 0; font-style: italic; color: #5a4a38; }

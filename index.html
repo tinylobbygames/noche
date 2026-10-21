@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Night Desk</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2712%27 fill=%27%230e0b12%27/%3E%3Ctext x=%2732%27 y=%2744%27 text-anchor=%27middle%27 font-family=%27monospace%27 font-size=%2734%27 font-weight=%27700%27 fill=%27%23ff5c8a%27%3E12%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <span class="title">NIGHT DESK</span>
+    <span id="night-tag"></span>
+    <div class="stats">
+      <span class="stat" id="s-cash"><span data-t="register">Register</span> <b>$0</b> <small id="s-total"></small></span>
+      <span class="stat trouble" id="s-trouble"><span data-t="trouble">Trouble</span> <b>0</b>/<i id="s-trouble-max">5</i></span>
+      <button id="notebook-btn" aria-haspopup="true" aria-expanded="false" title="Notebook" hidden>📓</button>
+      <button id="settings-btn" aria-haspopup="true" aria-expanded="false" title="Settings">⚙</button>
+    </div>
+    <div id="notebook" hidden></div>
+    <div id="settings" hidden>
+      <div class="set-row"><span data-set="language">Language</span><span id="lang"><button data-lang="en">EN</button><button data-lang="uk">UK</button><button data-lang="es">ES</button></span></div>
+      <div class="set-row set-sound"><span data-set="sound">Sound</span>
+        <button id="voice">🔊 <small data-set="voices">Voices</small></button>
+        <button id="audio">🌧 <small data-set="ambience">Rain &amp; lamp</small></button>
+        <button id="music">🎵 <small data-set="music">Music</small></button></div>
+      <div id="set-dyn"></div>
+      <button id="set-home" hidden>⌂ To title</button>
+    </div>
+  </header>
+
+  <div id="title">
+    <div class="t-studio" id="t-studio"></div>
+    <div class="t-neon">NIGHT DESK</div>
+    <p id="t-tagline"></p>
+    <p id="t-intro" class="t-intro"></p>
+    <p id="t-endings" class="t-endings"></p>
+    <div id="t-gallery" class="t-gallery" hidden></div>
+    <div id="t-buttons"></div>
+    <div id="t-extra" class="t-extra"></div>
+  </div>
+
+  <div id="credits" class="credits" hidden></div>
+
+  <div id="game" hidden>
+    <div id="scene">
+      <div class="neon-sign">VACANCY</div>
+      <div class="fx rain w1" aria-hidden="true"></div>
+      <div class="fx rain w2" aria-hidden="true"></div>
+      <div class="fx lamp-glow" aria-hidden="true"></div>
+      <div class="fx neon-glow" aria-hidden="true"></div>
+      <div class="fx hit-vignette" aria-hidden="true"></div>
+      <div class="clock" id="clock">23:00</div>
+      <div class="guest" id="guest"></div>
+      <div class="night-card" id="night-card"></div>
+    </div>
+
+    <div id="dialog">
+      <div class="speaker" id="speaker"></div>
+      <div class="line" id="line"></div>
+    </div>
+
+    <div id="choices"></div>
+  </div>
+  <footer id="foot"></footer>
+</div>
+
+<script src="story/vo_manifest.js"></script>
+<script src="story/vo_sprites.js" onerror="void 0"></script>
+<script src="engine.js"></script>
+<script src="story/night1.js"></script>
+<script src="story/night2.js"></script>
+<script src="story/night3.js"></script>
+<script src="story/night4.js"></script>
+<script src="story/night5.js"></script>
+<script src="story/night6.js"></script>
+<script src="story/morning.js"></script>
+<script src="story/secrets.js" onerror="void 0"></script>
+<script>showTitle();</script>
+</body>
+</html>

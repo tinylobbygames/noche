@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Abuela</title>
+<meta name="description" content="Tú eres la abuela. Tu trabajo es no colgar.">
+<meta property="og:title" content="La Abuela">
+<meta property="og:description" content="Tú eres la abuela. Tu trabajo es no colgar.">
+<meta property="og:image" content="art/abuela.png">
+<link rel="icon" href="art/abuela.png">
+<meta name="theme-color" content="#0e0b12">
+<style>
+  :root { --neon: #ff5c8a; --amber: #f2b34c; --bg: #0e0b12; --panel: #1a141f; --ink: #f5f0f6; --muted: #9a8fa3; --good: #7fd48a; --bad: #e0574f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; min-height: 100%; }
+  body { display: flex; justify-content: center; }
+  #app { width: min(100vw, 520px); min-height: 100dvh; display: flex; flex-direction: column; position: relative; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+  /* ---------- title ---------- */
+  #title { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 16px; gap: 18px;
+    background: radial-gradient(ellipse at 50% 30%, #2a1a2c 0%, var(--bg) 70%); }
+  #title h1 { font-family: 'IBM Plex Mono', monospace; font-size: clamp(40px, 12vw, 72px); letter-spacing: 6px; color: var(--neon); margin: 0; text-shadow: 0 0 24px rgba(255,92,138,.45); }
+  #title p { color: var(--amber); font-size: 18px; margin: 0; }
+  #langs { display: flex; gap: 8px; }
+  #langs button { background: transparent; border: 1px solid var(--muted); color: var(--muted); border-radius: 8px; padding: 6px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; cursor: pointer; }
+  #langs button.on { border-color: var(--neon); color: var(--neon); }
+  #title .how { color: var(--muted); font-size: 14px; max-width: 320px; line-height: 1.45; }
+  #title img { width: 180px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 30px rgba(255,92,138,.3); object-fit: cover; aspect-ratio: 1; object-position: 50% 25%; }
+  .btn { background: var(--neon); color: #1a0a10; border: 0; border-radius: 10px; padding: 14px 28px; font-size: 18px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--muted); }
+  .ring { animation: ring .9s ease-in-out infinite; }
+  @keyframes ring { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-6deg) } 40% { transform: rotate(6deg) } 60% { transform: rotate(-4deg) } 80% { transform: rotate(4deg) } }
+
+  /* ---------- call ---------- */
+  #call { flex: 1; display: none; flex-direction: column; }
+  #hud { display: flex; gap: 10px; padding: 10px 14px 6px; font-size: 12px; color: var(--muted); }
+  .meter { flex: 1; }
+  .meter b { display: block; color: var(--ink); font-weight: 500; margin-bottom: 4px; font-size: 12px; }
+  .bar { height: 8px; background: #2a2230; border-radius: 4px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; transition: width .5s; border-radius: 4px; }
+  #pat i { background: var(--good); } #sus i { background: var(--bad); }
+  #clock { text-align: right; min-width: 64px; }
+  #clock b { font-size: 18px; color: var(--amber); }
+  #clues { display: flex; gap: 6px; padding: 0 14px 6px; min-height: 22px; flex-wrap: wrap; }
+  .clue { font-size: 11px; background: #2a2230; color: var(--amber); border: 1px solid var(--amber); border-radius: 12px; padding: 2px 8px; }
+  #stage { position: relative; height: 42dvh; min-height: 220px; overflow: hidden; background: #000; }
+  #stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; opacity: 0; transition: opacity .35s; }
+  #stage img.on { opacity: 1; }
+  #stage::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,11,18,0) 55%, var(--bg) 100%); pointer-events: none; }
+  #who { position: absolute; top: 10px; left: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: var(--neon); z-index: 2; text-shadow: 0 1px 4px #000; }
+  #bubble { margin: -18px 14px 0; position: relative; z-index: 2; background: var(--panel); border-radius: 14px; padding: 14px 16px; font-size: 17px; line-height: 1.4; min-height: 84px; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+  #bubble.abuela { border-left: 4px solid var(--amber); }
+  #bubble.est { border-left: 4px solid var(--neon); }
+  #bubble.est.more::after { content: '▸'; position: absolute; right: 12px; bottom: 6px; color: var(--muted); font-size: 14px; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .2 } }
+  #cards { padding: 12px 14px 16px; display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+  .card { background: var(--panel); border: 1px solid #332a3a; border-radius: 12px; padding: 12px 14px; text-align: left; color: var(--ink); font-size: 15px; line-height: 1.35; cursor: pointer; font-family: inherit; display: flex; gap: 10px; align-items: flex-start; }
+  .card:active { transform: scale(.985); }
+  .card small { color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; min-width: 14px; padding-top: 3px; }
+  .card:disabled { opacity: .35; cursor: default; }
+  .btn.next { align-self: center; padding: 12px 36px; }
+  .btn.donate { background: var(--amber); color: #1a1008; text-decoration: none; display: inline-block; }
+  .donate-small { color: var(--amber); font-size: 14px; text-decoration: none; border-bottom: 1px dotted var(--amber); }
+  .hint { color: var(--muted); font-size: 12px; text-align: center; padding-bottom: 4px; }
+  #toast { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); background: var(--amber); color: #1a1008; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 9; }
+  #toast.on { opacity: 1; }
+
+  /* ---------- ending ---------- */
+  #end { flex: 1; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 18px; gap: 14px; }
+  #end img { width: 120px; aspect-ratio: 1; object-fit: cover; object-position: 50% 25%; border-radius: 50%; border: 3px solid var(--neon); }
+  #end img.bad { border-color: var(--bad); filter: grayscale(.6); }
+  #end h2 { font-family: 'IBM Plex Mono', monospace; letter-spacing: 3px; color: var(--neon); margin: 0; font-size: 22px; }
+  #end h2.bad { color: var(--bad); }
+  #end .big { font-size: 44px; color: var(--amber); font-family: 'IBM Plex Mono', monospace; margin: 0; }
+  #end p { margin: 0; line-height: 1.45; max-width: 360px; }
+  #end .muted { color: var(--muted); font-size: 14px; }
+  #end .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  footer { color: var(--muted); font-size: 11px; text-align: center; padding: 10px; font-family: 'IBM Plex Mono', monospace; }
+  /* phones: a shorter portrait so the three cards fit without scrolling */
+  @media (max-height: 900px) {
+    #stage { height: 32dvh; min-height: 180px; }
+    #bubble { font-size: 16px; padding: 12px 14px; min-height: 72px; }
+    .card { padding: 10px 12px; font-size: 14.5px; }
+    #cards { gap: 6px; padding-bottom: 10px; }
+  }
+  @media (max-width: 420px) { #title h1 { letter-spacing: 3px; font-size: 44px; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="title">
+    <img src="art/abuela.png" alt="">
+    <h1>LA ABUELA</h1>
+    <p data-t="slogan"></p>
+    <div class="how" data-t="how"></div>
+    <button class="btn ring" id="answer"></button>
+    <div class="how" id="best"></div>
+    <div id="langs"><button data-lang="es">ES</button><button data-lang="en">EN</button><button data-lang="uk">UK</button></div>
+    <a class="donate-small" id="donate2" href="https://tinylobby.itch.io/night-desk/donate" target="_blank" rel="noopener"></a>
+    <footer>Tiny Lobby</footer>
+  </section>
+
+  <section id="call">
+    <div id="hud">
+      <div class="meter" id="pat"><b data-t="patience"></b><div class="bar"><i></i></div></div>
+      <div class="meter" id="sus"><b data-t="suspicion"></b><div class="bar"><i></i></div></div>
+      <div id="clock"><b class="mono">0:00</b><br><span data-t="stolen"></span></div>
+    </div>
+    <div id="clues"></div>
+    <div id="stage">
+      <div id="who"></div>
+      <img id="img-est" src="art/estafador.png" alt="">
+      <img id="img-abu" src="art/abuela.png" alt="">
+      <img id="img-jefe" src="art/jefe.png" alt="">
+    </div>
+    <div id="bubble"></div>
+    <div id="cards"></div>
+  </section>
+
+  <section id="end">
+    <img id="end-img" src="art/abuela.png" alt="">
+    <h2 id="end-title"></h2>
+    <p class="big mono" id="end-time"></p>
+    <p id="end-text"></p>
+    <p class="muted" id="end-clues"></p>
+    <div class="row">
+      <button class="btn" id="again"></button>
+      <button class="btn ghost" id="share"></button>
+    </div>
+    <a class="btn donate" id="donate" href="https://tinylobby.itch.io/night-desk/donate" target="_blank" rel="noopener"></a>
+    <footer>La Abuela · Tiny Lobby</footer>
+  </section>
+  <div id="toast"></div>
+</div>
+
+<script>
+// La Abuela — prototype of one call (25.10.2026). One scammer, three kinds of cards, two meters.
+// A card: { k: 'd'|'p'|'f'|'t' (stall / ask back / fake data / trap), text, pat, sus, time (seconds), clue, react }
+// The trap looks like the other cards. Choosing it gives the scammer something real and ends the call.
+// 25.10: three languages (Natalia does not read Spanish). Every string is {es, en, uk}; T() picks the current one.
+const LANGS = ['es', 'en', 'uk'];
+let LANG = new URLSearchParams(location.search).get('lang') || localStorage.getItem('abuela_lang') || (navigator.language || 'es').slice(0, 2);
+if (!LANGS.includes(LANG)) LANG = 'es';
+const T = (o) => typeof o === 'string' ? o : (o[LANG] ?? o.es);
+
+const UI = {
+  slogan: { es: 'Tu trabajo es no colgar.', en: 'Your job is not to hang up.', uk: 'Твоя робота — не класти слухавку.' },
+  how: { es: 'Te llama un estafador. No le des nada de verdad. Cada minuto que pierde contigo es un minuto que no roba a nadie.',
+         en: 'A scammer is calling. Give him nothing real. Every minute he wastes on you is a minute he is not robbing anyone.',
+         uk: 'Тобі дзвонить шахрай. Не давай йому нічого справжнього. Кожна хвилина, яку він витрачає на тебе, — хвилина, коли він нікого не грабує.' },
+  answer: { es: '📞 Contestar', en: '📞 Answer', uk: '📞 Відповісти' },
+  donate: { es: '💶 Añadir algo a la pensión de la abuela', en: '💶 Top up Grandma’s pension', uk: '💶 Докинути бабусі до пенсії' },
+  patience: { es: 'Paciencia del estafador', en: "Scammer's patience", uk: 'Терпіння шахрая' },
+  suspicion: { es: 'Sospecha', en: 'Suspicion', uk: 'Підозра' },
+  stolen: { es: 'robado', en: 'stolen', uk: 'вкрадено' },
+  abuela: { es: 'LA ABUELA', en: 'GRANDMA', uk: 'БАБУСЯ' }, est: { es: 'EL ESTAFADOR', en: 'THE SCAMMER', uk: 'ШАХРАЙ' }, jefe: { es: 'EL JEFE', en: 'THE BOSS', uk: 'БОС' },
+  best: { es: 'Tu récord', en: 'Your best', uk: 'Твій рекорд' }, manoloN: { es: 'veces Manolo', en: 'times Manolo', uk: 'разів Маноло' },
+  next: { es: 'Seguir ▸', en: 'Next ▸', uk: 'Далі ▸' },
+  hint: { es: '1–4 elegir · no cuelgues · no le des nada de verdad', en: '1–4 to choose · don’t hang up · give him nothing real', uk: '1–4 обрати · не клади слухавку · нічого справжнього' },
+  clueNoted: { es: 'Pista apuntada: ', en: 'Clue noted: ', uk: 'Підказку записано: ' },
+  again: { es: '📞 Otra llamada', en: '📞 Another call', uk: '📞 Ще дзвінок' },
+  share: { es: 'Enviar a un amigo', en: 'Send to a friend', uk: 'Надіслати другові' },
+  copied: { es: 'Enlace copiado', en: 'Link copied', uk: 'Посилання скопійовано' },
+  clues: { es: 'Pistas: ', en: 'Clues: ', uk: 'Підказки: ' },
+  noClues: { es: 'Sin pistas. Pregúntale más la próxima vez.', en: 'No clues. Ask him more next time.', uk: 'Без підказок. Наступного разу розпитай його більше.' },
+};
+const CLUES = {
+  cuenta: { es: 'cuenta ES21 0049…', en: 'account ES21 0049…', uk: 'рахунок ES21 0049…' },
+  ciudad: { es: 'Valencia', en: 'Valencia', uk: 'Валенсія' },
+  nombre: { es: 'Jorge Ramírez', en: 'Jorge Ramírez', uk: 'Хорхе Рамірес' },
+};
+
+// 25.10, Natalia: scammers talk like cold officials (real calls: "junior specialist of the monitoring department", "this call is recorded");
+// grandma wins with sincere bewilderment and everyday detail, with one real joke per story, not more.
+// The call opens at random: the "grandson" himself, or his "lawyer". Each opening has its own cards; from story 2 on the call is shared.
+const OPENINGS = [
+  { who: 'est', say: { es: 'Abuela… soy yo. No puedo hablar alto. Estoy en comisaría. He tenido un accidente, no ha sido culpa mía. Ahora te paso con el abogado, él te lo explica. No llames a mamá todavía.',
+                        en: "Grandma… it's me. I can't talk loud. I'm at the police station. I had an accident, it wasn't my fault. I'll put the lawyer on, he'll explain. Don't call Mum yet.",
+                        uk: 'Бабусю… це я. Не можу голосно говорити. Я в поліції. Була аварія, я не винен. Зараз передам слухавку адвокату. Тільки мамі поки не дзвони.' },
+    cards: [
+      { k: 'd', text: { es: '¿Un accidente? Dios mío. ¿Dónde estás, en qué comisaría? Espera, cojo tus papeles, están en el cajón de los recibos… o en el abrigo. No cuelgues, que los busco.', en: "An accident? Good Lord. Where are you, which station? Hold on, I'll get your papers, they're in the drawer with the receipts… or in my coat. Don't hang up, I'm looking.", uk: 'В аварії? Господи. Де ти, у якому відділку? Зараз, я візьму твої документи, вони в шухляді з квитанціями… чи в пальті. Не клади слухавку, я шукаю.' },
+        pat: -10, sus: 0, time: 40, react: { es: 'Abuela, no hacen falta papeles. Escucha al abogado y ya.', en: "Grandma, you don't need papers. Just listen to the lawyer.", uk: 'Бабусю, не треба документів. Просто послухай адвоката.' } },
+      { k: 'p', text: { es: '¿Cuál de mis nietos? No tienes tu voz.', en: "Which of my grandsons? That's not your voice.", uk: 'Котрий з онуків? Голос у тебе не твій.' },
+        pat: -5, sus: 10, time: 15, flag: 'mayor', react: { es: 'El mayor. Estoy resfriado, abuela. Soy el mayor.', en: "The eldest. I've got a cold, Grandma. It's the eldest.", uk: 'Старший. Я застуджений, бабусю. Це старший.' } },
+      { k: 'f', text: { es: 'Claro, hijo. Solo que tengo un papel en la nevera que dice «NIETO EN APUROS = NO PAGAR». Lo puso tu madre. Dime la cuenta, que lo apunto encima.', en: "Of course, sweetheart. Only there's a note on my fridge that says 'GRANDSON IN TROUBLE = DON'T PAY'. Your mum put it there. Tell me the account, I'll write it right over it.", uk: 'Звісно, любий. Тільки в мене на холодильнику папірець: «ОНУК У БІДІ — НЕ ПЛАТИ». Це твоя мама повісила. Диктуй рахунок, я прямо поверх напишу.' },
+        pat: 10, sus: 5, time: 20, clue: 'cuenta', react: { es: '…Apunta: ES21 0049… Y quita ese papel.', en: '…Write it down: ES21 0049… And take that note down.', uk: '…Диктую: ES21 0049… І зірви той папірець.' } },
+    ] },
+  { who: 'est', say: { es: 'Señora, buenos días. Letrado Ramírez, represento a su nieto. Está detenido tras un accidente de tráfico y ahora mismo no puede hablar. Le llamo para gestionar la fianza. Esta llamada está siendo grabada.',
+                        en: "Good morning, madam. Ramírez, attorney at law, I represent your grandson. He's been detained after a road accident and can't speak right now. I'm calling to arrange the bail. This call is being recorded.",
+                        uk: 'Сеньйоро, добрий день. Адвокат Рамірес, представляю інтереси вашого онука. Він затриманий після ДТП і зараз не може говорити. Я дзвоню, щоб узгодити заставу. Розмова записується.' },
+    cards: [
+      { k: 'd', text: { es: '¿Abogado? Espere, que cojo las gafas y un boli, tengo que apuntarlo todo. ¿Cómo ha dicho que se llama? Deletréemelo. R… ¿y luego?', en: "A lawyer? Wait, let me get my glasses and a pen, I need to write all this down. What did you say your name was? Spell it for me. R… and then?", uk: 'Адвокат? Зачекайте, я візьму окуляри й ручку, мені треба все записати. Як, ви сказали, прізвище? По буквах, будь ласка. Р… а далі?' },
+        pat: -10, sus: 0, time: 35, clue: 'nombre', react: { es: 'Ramírez. R-a-m-í-r-e-z. Jorge Ramírez. Señora, el tiempo corre.', en: 'Ramírez. R-a-m-i-r-e-z. Jorge Ramírez. Madam, time is running.', uk: 'Рамірес. Р-а-м-і-р-е-с. Хорхе Рамірес. Сеньйоро, час іде.' } },
+      { k: 'p', text: { es: '¿Qué nieto? Tengo once. ¿Y por qué me llama usted y no la policía?', en: 'Which grandson? I have eleven. And why are you calling me and not the police?', uk: 'Котрий онук? У мене їх одинадцять. І чому дзвоните ви, а не поліція?' },
+        pat: -10, sus: 10, time: 15, flag: 'mayor', react: { es: '…El mayor. La policía la llamará más tarde. Ahora lo importante es la fianza.', en: '…The eldest. The police will call you later. Right now the bail is what matters.', uk: '…Старший. Поліція зателефонує пізніше. Зараз важлива застава.' } },
+      { k: 'f', text: { es: 'Claro que pago. Pero antes dígame cuánto cobra usted, que el abogado anterior me cobró trescientos euros y solo me ganó una multa de aparcamiento.', en: "Of course I'll pay. But first tell me what you charge, because the last lawyer charged me three hundred euros and all he won me was a parking fine.", uk: 'Звісно, заплачу. Тільки спочатку скажіть, скільки коштують ваші послуги, бо минулий адвокат узяв з мене триста євро і виграв тільки штраф за паркування.' },
+        pat: 10, sus: 5, time: 25, clue: 'cuenta', react: { es: 'Mis honorarios ya están cubiertos. La fianza son dos mil euros. Apunte la cuenta: ES21 0049…', en: 'My fees are already covered. The bail is two thousand euros. Write down the account: ES21 0049…', uk: 'Мої послуги вже оплачені. Застава — дві тисячі. Записуйте рахунок: ES21 0049…' } },
+    ] },
+];
+const BEATS = [
+  { say: (s) => OPENINGS[s.opening].say, cards: (s) => OPENINGS[s.opening].cards },
+  { say: () => ({ es: 'Señora, escúcheme bien. Soy el abogado de su nieto. Está detenido; el otro conductor tiene una fractura de columna. Si antes de las cinco no hay fianza, dos mil euros, el caso pasa al juzgado y su nieto cumple tres años. No llame a nadie ni lo consulte con nadie: hay secreto de sumario y la responsable de cualquier filtración es usted.',
+                  en: "Madam, listen to me carefully. I'm your grandson's lawyer. He's been detained; the other driver has a spinal fracture. If there's no bail by five o'clock, two thousand euros, the case goes to court and your grandson does three years. Don't call anyone and don't discuss this with anyone: the case is sealed, and any leak is on you.",
+                  uk: 'Сеньйоро, слухайте уважно. Я адвокат вашого онука. Він затриманий, у потерпілого перелом хребта. Якщо до п’ятої не буде застави — дві тисячі — справа йде в суд, і він сяде на три роки. Нікому не дзвоніть і ні з ким не радьтеся: це таємниця слідства, за розголошення відповідаєте ви.' }),
+    cards: [
+      { k: 'd', text: { es: '¿Tres años? Bien. Que los cumpla. Llevo veinte años diciéndole que no corra. A lo mejor allí aprende. Dígale que la abuela no ha llorado.', en: "Three years? Fine. Let him do them. I've spent twenty years telling him not to speed. Maybe in there he'll learn. Tell him Grandma didn't cry.", uk: 'Три роки? Добре. Хай сидить. Я йому двадцять років кажу: не ганяй. Може, хоч там навчиться. Передайте, що бабуся не плакала.' },
+        pat: -20, sus: 5, time: 25, react: { es: 'Señora… no me ha entendido. Es su nieto.', en: "Madam… you haven't understood me. He's your grandson.", uk: 'Сеньйоро… ви не зрозуміли. Це ж ваш онук.' } },
+      { k: 'p', text: { es: 'Fractura de columna, ¿de quién exactamente? Apellido del herido, hospital, habitación. Le llevo unas naranjas. ¿Qué ciudad?', en: "A spinal fracture, whose exactly? The injured man's surname, hospital, room. I'll bring him some oranges. Which city?", uk: 'Перелом хребта — у кого саме? Прізвище потерпілого, лікарня, палата. Я йому апельсини відвезу. Місто яке?' },
+        pat: -10, sus: 15, time: 20, clue: 'ciudad', react: { es: '…Valencia. No hacen falta naranjas. Hacen falta dos mil euros.', en: '…Valencia. He doesn\'t need oranges. He needs two thousand euros.', uk: '…Валенсія. Не треба апельсинів. Треба дві тисячі.' } },
+      { k: 'f', text: { es: 'Dos mil tengo, en efectivo. En el armario, guardados para mi entierro. Se los doy. Pero si el nieto entra en la cárcel, ¿quién me entierra a mí? ¿Vendrá usted?', en: "I've got two thousand in cash. In the wardrobe, put aside for my funeral. You can have them. But if my grandson goes to prison, who buries me? Will you come?", uk: 'Дві тисячі є, готівкою. У шафі, відкладені на похорон. Віддам. Але якщо онук сяде, хто мене ховатиме? Ви приїдете?' },
+        pat: 15, sus: 5, time: 30, flag: 'cash', react: { es: 'Irá un mensajero. A por el dinero. Hoy. La dirección.', en: "A courier will come. For the money. Today. The address.", uk: 'Приїде кур’єр. За грошима. Сьогодні. Адресу.' } },
+    ] },
+  { say: (s) => s.flags.cash
+      ? { es: 'El mensajero ya va de camino, llega en veinte minutos. Mientras tanto, dícteme el número de su tarjeta. Es para el acta: la fianza tiene que constar a su nombre, no al del mensajero.', en: "The courier is already on his way, twenty minutes. In the meantime, give me your card number. It's for the record: the bail has to be in your name, not the courier's.", uk: 'Кур’єр уже їде, буде за двадцять хвилин. Поки він добирається, продиктуйте номер картки. Це для протоколу: застава має бути оформлена на вас, а не на кур’єра.' }
+      : { es: 'Una transferencia no llega a tiempo, el banco la retiene. Dícteme el número de su tarjeta y tramito yo la fianza. Los dieciséis números, la caducidad y las tres cifras de atrás.', en: "A transfer won't make it in time, the bank will hold it. Give me your card number and I'll process the bail myself. All sixteen digits, the expiry date and the three numbers on the back.", uk: 'Переказати не встигнете, банк затримає операцію. Продиктуйте номер картки, я проведу заставу сам. Усі шістнадцять цифр, термін і три цифри ззаду.' },
+    cards: [
+      { k: 'd', text: { es: 'Para el acta, bien. Cuatro, siete, dos… no, espere, eso es el código del portal. La tarjeta está en el bolso, el bolso en el pasillo, y el pasillo es donde me caí en marzo. Voy despacio.', en: "For the record, fine. Four, seven, two… no, wait, that's the door-entry code. The card's in my bag, the bag's in the hallway, and the hallway is where I fell in March. I'm going slowly.", uk: 'Для протоколу — добре. Чотири, сім, два… ні, стоп, це код від під’їзду. Картка в сумці, сумка в коридорі, а коридор — це де я впала в березні. Йду повільно.' },
+        pat: -20, sus: 0, time: 45, react: { es: 'Señora, más rápido. El mensajero no va a esperar.', en: "Madam, faster. The courier won't wait.", uk: 'Сеньйоро, швидше. Кур’єр не чекатиме.' } },
+      { k: 'p', text: { es: 'Las tres cifras de atrás… vienen tan pequeñas que sin lupa no las veo. Léamelas usted, que lo tiene todo en el sistema. Y dígame su apellido, que se lo diré a mi nieto: quién le ayudó tanto.', en: "The three numbers on the back… they're so small I can't see them without a magnifier. Read them to me, you've got everything in the system. And tell me your surname, so I can tell my grandson who helped him so much.", uk: 'Три цифри ззаду… там так дрібно, я без лупи не бачу. А прочитайте мені їх ви, у вас же все в системі. І скажіть ваше прізвище, я онуку передам, хто йому так допоміг.' },
+        pat: -10, sus: 10, time: 25, clue: 'nombre', react: { es: '…En el sistema no salen, señora. Ramírez. Jorge Ramírez. Léalas usted.', en: "…They don't show in the system, madam. Ramírez. Jorge Ramírez. You read them.", uk: '…У системі їх немає, сеньйоро. Рамірес. Хорхе Рамірес. Читайте ви.' } },
+      { k: 't', text: { es: 'Apunte: cuatro cinco tres uno, dos dos cero cero, siete uno cero cuatro, nueve nueve ocho seis. Caduca el cero tres del veintisiete.', en: 'Write it down: four five three one, two two zero zero, seven one zero four, nine nine eight six. Expires zero three, twenty-seven.', uk: 'Записуйте: чотири п’ять три один, два два нуль нуль, сім один нуль чотири, дев’ять дев’ять вісім шість. Термін — нуль три, двадцять сім.' }, trap: true },
+      { k: 'f', text: { es: 'Cuatro cinco tres uno… espere. Esta es la vieja, la bloquearon la semana pasada: llamó alguien como usted y se la dicté. La nueva vino por correo, no he abierto el sobre. ¿Lo abro?', en: "Four five three one… wait. That's the old one, they blocked it last week: someone like you called and I read it out. The new one came in the post, I haven't opened the envelope. Shall I?", uk: 'Чотири п’ять три один… стоп. Це стара, її заблокували минулого тижня — хтось дзвонив, як ви, і я продиктувала. Нова прийшла поштою, конверт не відкривала. Відкрити?' },
+        pat: 5, sus: 10, time: 35, react: { es: '…Ábralo. Léala. Y esta vez, a mí.', en: '…Open it. Read it. And this time, to me.', uk: '…Відкривайте. Читайте. І цього разу — мені.' } },
+    ] },
+  { say: (s) => s.sus >= 40
+      ? { es: 'Señora, estoy grabando esta conversación para el juzgado. Está usted alargando el tiempo a propósito. Si su nieto entra en prisión por su culpa, constará en el acta.', en: "Madam, I'm recording this conversation for the court. You are deliberately stalling. If your grandson goes to prison because of you, it will be on the record.", uk: 'Сеньйоро, я записую цю розмову для суду. Ви навмисно тягнете час. Якщо онук сяде через вас — це буде у протоколі.' }
+      : { es: 'Señora, ¿me oye? ¿Tiene la tarjeta delante? El mensajero ya está junto a su portal.', en: "Madam, can you hear me? Is the card in front of you? The courier is already outside your building.", uk: 'Сеньйоро, ви мене чуєте? Картка перед вами? Кур’єр уже біля вашого будинку.' },
+    cards: [
+      { k: 'd', text: { es: '¿Junto a mi portal? ¿Cuál? Si no le he dado la dirección. Ay, espere, llaman a la puerta… No, es el gato, que viene del balcón. Minino, ¿otra vez en casa de la vecina?', en: "Outside my building? Which one? I never gave you the address. Oh, wait, someone's at the door… No, it's the cat, in from the balcony. Kitty, were you at the neighbour's again?", uk: 'Біля будинку? Якого? Я ж вам адреси не давала. Ой, зачекайте, хтось у двері… Ні, це кіт з балкона. Мурчику, ти знову в сусідів був?' },
+        pat: -15, sus: 0, time: 35, react: { es: 'Señora. La tarjeta. Ahora.', en: 'Madam. The card. Now.', uk: 'Сеньйоро. Картка. Зараз.' } },
+      { k: 'p', text: { es: '¿Está Lucía con usted? Dele recuerdos de mi parte.', en: 'Is Lucy there with you? Give her my regards.', uk: 'Ви там з Оксаною? Передайте їй привіт від мене.' },
+        pat: -5, sus: 10, time: 15, react: { es: '…Sí, se los doy.', en: '…Yes, I will.', uk: '…Так, передам.' } },   // there is no Lucía: he just gave himself away
+      { k: 'f', text: { es: 'Aquí está. Es azul. ¿En su sistema también sale azul? Porque si le sale verde, esa no es la mía, se lo digo ya.', en: "Here it is. It's blue. Does it show blue in your system too? Because if yours says green, that's not mine, I'm telling you now.", uk: 'Ось вона. Синя. У вас у системі теж синя? Бо якщо у вас зелена, то це не моя, я вам одразу кажу.' },
+        pat: 5, sus: 5, time: 20, react: { es: 'Azul, señora. Da igual. Los números.', en: 'Blue, madam. Whatever. The numbers.', uk: 'Синя, сеньйоро. Байдуже. Цифри.' } },
+    ] },
+  // the "senior" takes the phone, like in real calls when the junior one fails
+  { who: 'jefe', say: () => ({ es: 'Señora, le habla el inspector jefe de la unidad. Mi compañero ha sido demasiado blando con usted. Tiene dos minutos. El código que acaba de llegarle por SMS. Si no, cierro el expediente y su nieto ingresa en prisión preventiva hoy mismo.',
+                  en: "Madam, this is the chief inspector of the unit. My colleague has been too soft with you. You have two minutes. The code that just came to you by text. Otherwise I close the file and your grandson goes into custody today.",
+                  uk: 'Сеньйоро, це старший інспектор відділу. Мій колега був з вами занадто м’який. У вас дві хвилини. Код з СМС, який щойно прийшов. Інакше я закриваю справу, і онук їде в СІЗО сьогодні.' }),
+    cards: [
+      { k: 'd', text: { es: '¿El jefe? Por fin. Explíquemelo desde el principio, que el de antes no me ha explicado nada. Quién chocó con quién, y qué pinta aquí mi código.', en: "The boss? At last. Explain it to me from the beginning, the one before you explained nothing. Who crashed into whom, and what my code has to do with it.", uk: 'Старший? Нарешті. Поясніть мені з самого початку, бо той, що був до вас, нічого не пояснив. Хто врізався, в кого, і до чого тут мій код.' },
+        pat: -25, sus: 0, time: 35, react: { es: 'No hay tiempo para explicaciones. El código.', en: "There's no time for explanations. The code.", uk: 'Нема часу пояснювати. Код.' } },
+      { k: 'p', text: (s) => s.flags.mayor
+          ? { es: 'El mayor es guardia civil, inspector. Acaba de entrar por la puerta. ¿Se lo paso? Es justo de su unidad.', en: "The eldest is a police officer, inspector. He just walked in the door. Shall I put him on? He's from your very unit.", uk: 'Старший у мене поліцейський, інспекторе. Він щойно зайшов. Передати йому? Він якраз із вашого відділу.' }
+          : { es: 'Mire, le paso con mi vecino, que es inspector jubilado. Él se lo confirma todo más rápido que yo.', en: "Look, let me put my neighbour on, he's a retired inspector. He'll confirm all this faster than I can.", uk: 'Давайте я передам трубку сусідові, він колишній слідчий. Він вам усе підтвердить швидше за мене.' },
+        pat: -30, sus: 25, time: 15, react: { es: '…No. No se lo pase a nadie.', en: "…No. Don't put anyone on.", uk: '…Ні. Нікому не передавайте.' } },
+      { k: 't', text: { es: 'Sí, ha llegado. Cuarenta y ocho, veintiuno, noventa y tres.', en: "Yes, it's here. Forty-eight, twenty-one, ninety-three.", uk: 'Так, прийшов. Сорок вісім, двадцять один, дев’яносто три.' }, trap: true },
+      { k: 'f', text: { es: 'Ha llegado. Pero debajo pone «no lo comparta con nadie, ni con empleados del banco». Usted no es del banco, ¿a usted sí se puede? Solo que no lo leo bien: nueve… o seis. El móvil es viejo, la pantalla está rayada.', en: "It's here. But underneath it says 'do not share with anyone, not even bank staff'. You're not from the bank, so you're allowed? Only I can't read it properly: nine… or six. The phone is old, the screen's scratched.", uk: 'Прийшов. Але під ним написано «нікому не повідомляйте, навіть працівникам банку». Ви ж не з банку, вам можна? Тільки я не можу прочитати: дев’ять… чи шість. Телефон старий, екран подряпаний.' },
+        pat: 10, sus: 10, time: 30, react: { es: 'A mí sí. Léalo tal cual.', en: 'To me, yes. Read it as it is.', uk: 'Мені можна. Читайте як є.' } },
+    ] },
+  { who: 'jefe', say: () => ({ es: 'Señora, último intento. Se lo digo yo personalmente. Diga el código y en cinco minutos su nieto está en la calle. O no lo diga, y quede en su conciencia.',
+                  en: "Madam, last attempt. I'm telling you personally. Say the code and in five minutes your grandson walks free. Or don't, and let it be on your conscience.",
+                  uk: 'Сеньйоро, остання спроба. Кажу вам особисто. Назвіть код — і за п’ять хвилин ваш онук вийде. Або ні, і це буде на вашій совісті.' }),
+    cards: [
+      { k: 'm', text: { es: '¡Manolo! Ponte, que es para ti. Jorge Ramírez, de Valencia, cuenta ES21 0049. Dice que es compañero tuyo.', en: "Manolo! Come to the phone, it's for you. Jorge Ramírez, from Valencia, account ES21 0049. He says he's your colleague.", uk: 'Маноло! Підійди, це тебе. Хорхе Рамірес із Валенсії, рахунок ES21 0049. Каже, що твій колега.' }, manolo: true },
+      { k: 'd', text: { es: 'En mi conciencia… Mire, llevo ochenta años cargando con mi conciencia. He enterrado a dos maridos y he pasado una guerra. Espere un minuto, que apago la cafetera.', en: "On my conscience… Look, I've carried my conscience for eighty years. I've buried two husbands and lived through a war. Wait a minute, I'll turn the kettle off.", uk: 'На совісті… Знаєте, я вісімдесят років ношу свою совість. Поховала двох чоловіків і пережила війну. Зачекайте хвилинку, я чайник вимкну.' },
+        pat: -25, sus: 0, time: 40, react: { es: '¡¡Señora!!', en: 'Madam!!', uk: 'Сеньйоро!!' } },
+      { k: 'p', text: { es: '¿Y su madre lo sabe? Porque está aquí, a mi lado, escuchando desde el principio. ¿Se la paso?', en: "And does his mother know? Because she's right here beside me, she's been listening from the start. Shall I put her on?", uk: 'А мама його знає? Бо вона тут, поруч, із самого початку слухає. Передати їй?' },
+        pat: -20, sus: 20, time: 15, react: { es: '…¿Qué?', en: '…What?', uk: '…Що?' } },
+      { k: 'f', text: { es: 'Nueve, nueve… ¿o seis? Hagamos una cosa: apunte los dos, que uno seguro que vale.', en: "Nine, nine… or six? Tell you what: write down both, one of them is bound to work.", uk: 'Дев’ять, дев’ять… чи шість? Давайте так: запишіть обидва, один точно підійде.' },
+        pat: 5, sus: 10, time: 25, react: { es: 'Eso no funciona así, señora. Un código.', en: "That's not how it works, madam. One code.", uk: 'Так не працює, сеньйоро. Один код.' } },
+    ] },
+];
+
+const ENDINGS = {
+  hangup: { t: { es: 'COLGÓ ÉL', en: 'HE HUNG UP', uk: 'ВІН ПОКЛАВ СЛУХАВКУ' },
+            text: { es: 'Pi… pi… pi. Se le acabó la paciencia. Ese rato no se lo ha robado a nadie.', en: 'Beep… beep… beep. He ran out of patience. That time, he robbed no one.', uk: 'Пі… пі… пі. Терпець йому урвався. Цей час він ні в кого не вкрав.' } },
+  outlasted: { t: { es: 'COLGÓ ÉL', en: 'HE HUNG UP', uk: 'ВІН ПОКЛАВ СЛУХАВКУ' },
+            text: { es: 'Veinte minutos después seguía al teléfono. Al final colgó él, sin los números y sin el código.', en: 'Twenty minutes later he was still on the line. In the end he hung up, without the numbers and without the code.', uk: 'Через двадцять хвилин він досі був на лінії. Зрештою поклав слухавку сам — без цифр і без коду.' } },
+  manolo: { t: { es: 'MANOLO SE PONE', en: 'MANOLO PICKS UP', uk: 'МАНОЛО БЕРЕ СЛУХАВКУ' },
+            text: { es: '«Guardia Civil, dígame.» Tres segundos de silencio. Pi, pi, pi. Nombre, ciudad y cuenta: con eso Manolo abre una denuncia de verdad. Ese número no vuelve a sonar.', en: '"Police, go ahead." Three seconds of silence. Beep, beep, beep. Name, city and account: with that, Manolo files a real report. That number never rings again.', uk: '«Поліція, слухаю.» Три секунди тиші. Пі, пі, пі. Ім’я, місто і рахунок: з цим Маноло відкриває справжню справу. Цей номер більше не дзвонить.' } },
+  caught: { t: { es: 'TE HA CALADO', en: 'HE SAW THROUGH YOU', uk: 'ВІН ТЕБЕ РОЗКУСИВ' }, bad: true,
+            text: { es: '«Señora, se acabó. Sabemos dónde vive.» Cuelga él. Mañana llamará otro, con otra voz y la misma historia. Esta vez no se ha llevado nada.', en: '"Madam, we\'re done. We know where you live." He hangs up. Tomorrow another one will call, with another voice and the same story. This time he took nothing.', uk: '«Сеньйоро, досить. Ми знаємо, де ви живете.» Він кладе слухавку. Завтра подзвонить інший, з іншим голосом і тією ж історією. Цього разу він не взяв нічого.' } },
+  trap: { t: { es: 'LE DISTE ALGO DE VERDAD', en: 'YOU GAVE HIM SOMETHING REAL', uk: 'ТИ ДАЛА ЙОМУ СПРАВЖНЄ' }, bad: true,
+            text: { es: 'Eran los números de verdad. Dos mil euros menos en la cuenta, y el estafador ya está llamando a la siguiente abuela.', en: 'Those were the real numbers. Two thousand euros gone from the account, and the scammer is already calling the next grandma.', uk: 'Це були справжні цифри. Мінус дві тисячі євро з рахунку, а шахрай уже дзвонить наступній бабусі.' } },
+};
+
+const $ = (id) => document.getElementById(id);
+// ---- sounds (WebAudio, no files): the phone rings on the title screen, a busy tone closes the call ----
+let actx = null;
+function audio() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); return actx; }
+function tone(freq, start, dur, gain = 0.08, type = 'sine') {
+  const c = audio(), o = c.createOscillator(), g = c.createGain();
+  o.type = type; o.frequency.value = freq; g.gain.value = 0;
+  g.gain.setValueAtTime(0, c.currentTime + start); g.gain.linearRampToValueAtTime(gain, c.currentTime + start + 0.01);
+  g.gain.setValueAtTime(gain, c.currentTime + start + dur - 0.02); g.gain.linearRampToValueAtTime(0, c.currentTime + start + dur);
+  o.connect(g); g.connect(c.destination); o.start(c.currentTime + start); o.stop(c.currentTime + start + dur);
+}
+let ringTimer = null;
+function ringStart() {   // European ring: 425 Hz, 1 s on / 4 s off
+  ringStop(); const burst = () => { try { tone(425, 0, 1.0, 0.05); } catch {} }; burst(); ringTimer = setInterval(burst, 5000);
+}
+function ringStop() { clearInterval(ringTimer); ringTimer = null; }
+function busyTone() {   // 425 Hz, 0.2 s on / 0.2 s off, five pips
+  try { for (let i = 0; i < 5; i++) tone(425, i * 0.4, 0.2, 0.07); } catch {}
+}
+const PAT0 = 70;
+const SUS_MAX = 80;   // 25.10: at 100 the 'caught' ending was unreachable (every all-questions path tops out at 90)
+let S;
+
+function applyLang() {
+  document.documentElement.lang = LANG; localStorage.setItem('abuela_lang', LANG);
+  for (const el of document.querySelectorAll('[data-t]')) el.textContent = T(UI[el.dataset.t]);
+  $('answer').textContent = T(UI.answer); $('again').textContent = T(UI.again); $('share').textContent = T(UI.share);
+  $('donate').textContent = T(UI.donate); $('donate2').textContent = T(UI.donate);
+  for (const b of document.querySelectorAll('#langs button')) b.classList.toggle('on', b.dataset.lang === LANG);
+  try {   // best result so far, per device
+    const st = JSON.parse(localStorage.getItem('abuela_stats') || '{}');
+    $('best').textContent = st.best ? `${T(UI.best)}: ${fmt(st.best)}` + (st.manolo ? ` · ${T(UI.manoloN)}: ${st.manolo}` : '') : '';
+  } catch { $('best').textContent = ''; }
+}
+function fresh() { return { pat: PAT0, sus: 0, time: 0, clues: [], flags: {}, beat: 0, busy: false, opening: Math.floor(Math.random() * OPENINGS.length) }; }
+function fmt(t) { return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
+function hud() {
+  $('pat').querySelector('i').style.width = Math.max(0, Math.min(100, S.pat)) + '%';
+  $('sus').querySelector('i').style.width = Math.max(0, Math.min(100, S.sus * 100 / SUS_MAX)) + '%';
+  $('clock').querySelector('b').textContent = fmt(S.time);
+  $('clues').innerHTML = S.clues.map((c) => `<span class="clue">🔎 ${T(CLUES[c])}</span>`).join('');
+}
+function show(who, text, more) {
+  for (const id of ['img-est', 'img-abu', 'img-jefe']) $(id).classList.remove('on');
+  $(who === 'abuela' ? 'img-abu' : who === 'jefe' ? 'img-jefe' : 'img-est').classList.add('on');
+  $('who').textContent = T(UI[who]);
+  $('bubble').className = (who === 'abuela' ? 'abuela' : 'est') + (more ? ' more' : '');
+  $('bubble').textContent = T(text);
+}
+let toastT;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 1800); }
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+// 25.10: reactions went by too fast to read. Reading time grows with the text; a tap on the bubble or Enter skips the wait.
+// Voice: vo/<lang>/<djb2 of the line>.mp3 (made by tools/abuela_vo.py). A missing file is fine: the line is read instead.
+function voHash(t) { let h = 5381; for (const ch of t) h = (Math.imul(h, 33) ^ ch.codePointAt(0)) >>> 0; return h.toString(16).padStart(8, '0'); }
+let voCur = null;
+// GoatCounter, the same site as Night Desk (docs/ANALYTICS.md); paths /abuela/<lang>/start and /abuela/<lang>/end/<kind>
+function track(path) {
+  try {
+    if (navigator.doNotTrack === '1' || location.protocol === 'file:' || /^(localhost|127\.)/.test(location.hostname)) return;
+    const p = '/abuela/' + LANG + path, ref = (document.referrer || '').split('?')[0];
+    new Image().src = 'https://nightdesk.goatcounter.com/count?p=' + encodeURIComponent(p) + '&t=' + encodeURIComponent('La Abuela ' + p) + (ref ? '&r=' + encodeURIComponent(ref) : '') + '&rnd=' + Date.now();
+  } catch {}
+}
+function speak(text) {   // resolves when the audio ends; resolves at once (false) when there is no file
+  if (voCur) { voCur.pause(); voCur = null; }
+  return new Promise((res) => {
+    const a = new Audio(`vo/${LANG}/${voHash(text)}.mp3`); voCur = a;
+    a.onended = () => { voCur = null; res(true); }; a.onerror = () => { voCur = null; res(false); };
+    a.play().catch(() => res(false));
+  });
+}
+function hold(voice) {   // 25.10 Natalia: no auto-advance without voice. The line stays until «Далі»/tap/Enter; with a voice file it advances 0.4 s after the audio ends
+  return new Promise((res) => {
+    const btn = document.createElement('button'); btn.className = 'btn next'; btn.textContent = T(UI.next); $('cards').innerHTML = ''; $('cards').appendChild(btn);
+    const done = () => { clearTimeout(tm); if (voCur) { voCur.pause(); voCur = null; } $('bubble').removeEventListener('click', done); document.removeEventListener('keydown', onKey); res(); };
+    const onKey = (e) => { if (e.key === 'Enter' || e.key === ' ') done(); };
+    let tm = null; btn.onclick = done; $('bubble').addEventListener('click', done); document.addEventListener('keydown', onKey);
+    voice.then((spoken) => { if (spoken) tm = setTimeout(done, 400); });
+  });
+}
+function tick(from, to) {   // the stolen seconds count up one by one
+  return new Promise((res) => { let t = from; const iv = setInterval(() => { t = Math.min(to, t + Math.max(1, Math.ceil((to - from) / 25))); S.time = t; hud(); if (t >= to) { clearInterval(iv); res(); } }, 40); });
+}
+const cardText = (c) => T(typeof c.text === 'function' ? c.text(S) : c.text);
+
+function renderCards() {
+  const beat = BEATS[S.beat]; const box = $('cards'); box.innerHTML = '';
+  const cards = (typeof beat.cards === 'function' ? beat.cards(S) : beat.cards).filter((c) => !c.manolo || S.clues.length === 3);
+  cards.forEach((c, i) => {
+    const b = document.createElement('button'); b.className = 'card';
+    b.innerHTML = `<small>${i + 1}</small><span>${cardText(c)}</span>`;
+    b.onclick = () => play(c); box.appendChild(b);
+  });
+  const h = document.createElement('div'); h.className = 'hint'; h.textContent = T(UI.hint); box.appendChild(h);
+}
+function lock() { for (const b of $('cards').querySelectorAll('button')) b.disabled = true; }
+
+async function play(c) {
+  if (S.busy) return; S.busy = true; lock();
+  const line = cardText(c); show('abuela', line); const spoke = speak(line);
+  if (c.trap) { await wait(1400); return ending('trap'); }
+  if (c.manolo) { await wait(1400); return ending('manolo'); }
+  const t0 = S.time; S.time += c.time; S.pat += c.pat; S.sus += c.sus;
+  if (c.flag) S.flags[c.flag] = true;
+  await tick(t0, S.time); hud(); await spoke;
+  if (c.clue && !S.clues.includes(c.clue)) { S.clues.push(c.clue); hud(); toast(T(UI.clueNoted) + T(CLUES[c.clue])); await wait(900); }
+  if (S.pat <= 0) { await wait(500); return ending('hangup'); }
+  if (S.sus >= SUS_MAX) { await wait(500); return ending('caught'); }
+  await wait(600); show(BEATS[S.beat].who || 'est', c.react, true);
+  // with a voice file the line stays until it is spoken (plus a beat); without one, for the reading time
+  const r = T(c.react); await hold(speak(r));
+  S.beat++;
+  if (S.beat >= BEATS.length) return ending('outlasted');
+  nextBeat();
+}
+function nextBeat() { S.busy = false; const b = BEATS[S.beat]; const l = T(b.say(S)); show(b.who || 'est', l); speak(l); renderCards(); }
+
+function ending(kind) {
+  const e = ENDINGS[kind]; S.ended = kind;
+  if (kind !== 'trap') busyTone();
+  track('/end/' + kind + '/' + fmt(S.time));
+  $('call').style.display = 'none'; $('end').style.display = 'flex';
+  $('end-title').textContent = T(e.t); $('end-title').className = e.bad ? 'bad' : '';
+  $('end-img').src = kind === 'caught' ? 'art/jefe.png' : kind === 'trap' ? 'art/estafador.png' : 'art/abuela.png'; $('end-img').className = e.bad ? 'bad' : '';
+  $('end-time').textContent = kind === 'trap' ? '−2000 €' : fmt(S.time);
+  $('end-text').textContent = T(e.text);
+  $('end-clues').textContent = S.clues.length ? T(UI.clues) + S.clues.map((c) => T(CLUES[c])).join(' · ') : T(UI.noClues);
+  try { const st = JSON.parse(localStorage.getItem('abuela_stats') || '{}'); st[kind] = (st[kind] || 0) + 1; st.best = Math.max(st.best || 0, kind === 'trap' ? 0 : S.time); localStorage.setItem('abuela_stats', JSON.stringify(st)); } catch {}
+  applyLang();
+}
+
+function start() {
+  S = fresh(); hud();
+  $('title').style.display = 'none'; $('end').style.display = 'none'; $('call').style.display = 'flex';
+  track('/start'); nextBeat();
+}
+$('answer').onclick = () => { ringStop(); start(); }; $('again').onclick = start;
+document.addEventListener('pointerdown', () => { if ($('title').style.display !== 'none' && !ringTimer) ringStart(); }, { once: true });
+for (const b of document.querySelectorAll('#langs button')) b.onclick = () => { LANG = b.dataset.lang; applyLang(); };
+$('share').onclick = async () => {   // 25.10 Natalia: send friends the game link, not the result
+  const url = location.origin + location.pathname + '?lang=' + LANG;
+  const txt = 'La Abuela 👵📞 ' + T(UI.slogan);
+  // phone: the system share sheet (WhatsApp, Telegram…); desktop: the link goes to the clipboard
+  if (navigator.share) { try { await navigator.share({ title: 'La Abuela', text: txt, url }); return; } catch {} }
+  try { await navigator.clipboard.writeText(url); toast(T(UI.copied)); } catch { toast(url); }
+};
+document.addEventListener('keydown', (e) => {
+  if ($('call').style.display !== 'flex' || S.busy) return;
+  const n = +e.key; const bs = $('cards').querySelectorAll('button');
+  if (n >= 1 && n <= bs.length) bs[n - 1].click();
+});
+applyLang();
+if (new URLSearchParams(location.search).has('start')) start();   // ?start opens straight on the call (screenshots, tests)
+{ const w = +new URLSearchParams(location.search).get('w'); if (w) $('app').style.width = w + 'px'; }   // ?w=390 previews a phone width on a desktop
+</script>
+</body>
+</html>

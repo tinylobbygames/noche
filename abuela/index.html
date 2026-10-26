@@ -28,7 +28,10 @@
   #langs button { background: transparent; border: 1px solid var(--muted); color: var(--muted); border-radius: 8px; padding: 6px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; cursor: pointer; }
   #langs button.on { border-color: var(--neon); color: var(--neon); }
   #title .how { color: var(--muted); font-size: 14px; max-width: 320px; line-height: 1.45; }
-  #title img { width: 180px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 30px rgba(255,92,138,.3); object-fit: cover; aspect-ratio: 1; object-position: 50% 25%; }
+  .duo { display: flex; align-items: center; }
+  .duo img { width: 150px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 30px rgba(255,92,138,.3); object-fit: cover; aspect-ratio: 1; object-position: 50% 22%; background: #000; }
+  .duo img.est { border-color: var(--muted); filter: saturate(.7); width: 130px; }
+  .duo .vs { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 22px; color: var(--amber); background: var(--bg); border: 3px solid var(--neon); border-radius: 50%; width: 52px; height: 52px; display: inline-flex; align-items: center; justify-content: center; margin: 0 -14px; position: relative; z-index: 2; box-shadow: 0 0 16px rgba(255,92,138,.4); }
   .btn { background: var(--neon); color: #1a0a10; border: 0; border-radius: 10px; padding: 14px 28px; font-size: 18px; font-weight: 600; cursor: pointer; font-family: inherit; }
   .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--muted); }
   .ring { animation: ring .9s ease-in-out infinite; }
@@ -121,7 +124,7 @@
 <div id="app">
   <section id="title">
     <button class="gear title-gear" data-gear title="Menu">⚙</button>
-    <img src="art/abuela.png" alt="">
+    <div class="duo"><img src="art/estafador.png" alt="" class="est"><span class="vs">VS</span><img src="art/abuela.png" alt=""></div>
     <h1>LA ABUELA</h1>
     <p data-t="slogan"></p>
     <div class="how" data-t="how"></div>
@@ -419,8 +422,11 @@ function syncedClip(text, a) {   // exact lips for this line, played in step wit
   const url = `talk/${LANG}/${voHash(text)}.mp4`;
   fetch(url, { method: 'HEAD' }).then((r) => {
     if (!r.ok || voCur !== a) return;
-    v.loop = false; v.src = url; v.currentTime = Math.max(0, a.currentTime); v.play().catch(() => {});
-    v.onended = () => { v.onended = null; v.loop = true; v.src = LOOPS[v.id]; v.pause(); };
+    v.loop = false; v.src = url;
+    const sync = () => { if (voCur !== a) return; if (Math.abs(v.currentTime - a.currentTime) > 0.12) v.currentTime = a.currentTime; };
+    v.addEventListener('loadeddata', () => { sync(); v.play().catch(() => {}); }, { once: true });
+    v.ontimeupdate = sync;   // keep the lips on the voice: re-seek when the drift passes 120 ms
+    v.onended = () => { v.onended = null; v.ontimeupdate = null; v.loop = true; v.src = LOOPS[v.id]; v.pause(); };
   }).catch(() => {});
 }
 // the talking-head loop runs while the character speaks; without a voice file, for about the reading time

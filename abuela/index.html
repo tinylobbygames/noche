@@ -15,7 +15,7 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; min-height: 100%; }
   body { display: flex; justify-content: center; }
-  :root { --side: min(100vw, 430px); }
+  :root { --side: min(100vw, 430px); --stage: min(var(--side), 44dvh); }   /* 01.11 Natalia: «ответы слишком низко, я их не видела в браузере» — the face shrinks on short windows so the cards stay in view */
   #app { width: var(--side); min-height: 100dvh; display: flex; flex-direction: column; position: relative; }
   .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
 
@@ -49,14 +49,15 @@
   #clock b { font-size: 18px; color: var(--amber); }
   #clues { display: flex; gap: 6px; padding: 0 14px 6px; min-height: 22px; flex-wrap: wrap; }
   .clue { font-size: 11px; background: #2a2230; color: var(--amber); border: 1px solid var(--amber); border-radius: 12px; padding: 2px 8px; }
-  #stage { position: relative; height: var(--side); overflow: hidden; background: #000; }
-  #stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .35s, filter .6s; }
+  #stage { position: relative; height: var(--stage); overflow: hidden; background: #000; }
+  /* 01.11 Natalia: «лицо нужно выше — буквы почти у рта»: the face is lifted 12% so the mouth clears the subtitle bubble */
+  #stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .35s, filter .6s; transform: translateY(-12%); }
   #stage video.on { opacity: 1; }
   /* the same man, a little different in each role: warm and close as the 'grandson', cold and formal as the 'lawyer' */
   #stage.look-nieto #v-est { filter: saturate(1.15) brightness(1.05); }
   #stage.look-abogado #v-est { filter: saturate(.55) contrast(1.15) brightness(.9) hue-rotate(-12deg); }
   #stage::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,11,18,0) 62%, rgba(14,11,18,.9) 100%); pointer-events: none; }
-  #bubble { margin: calc(var(--side) * -0.3) 12px 0; position: relative; z-index: 2; background: rgba(14,11,18,.74); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 10px 14px 12px; font-size: 19px; font-weight: 600; line-height: 1.35; min-height: 72px; text-shadow: 0 1px 3px #000, 0 0 8px rgba(0,0,0,.8); }
+  #bubble { margin: calc(var(--stage) * -0.2) 12px 0; position: relative; z-index: 2; background: rgba(14,11,18,.74); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 10px 14px 12px; font-size: 19px; font-weight: 600; line-height: 1.35; min-height: 72px; text-shadow: 0 1px 3px #000, 0 0 8px rgba(0,0,0,.8); }
   #bubble .w { transition: color .08s; }
   #bubble .w.on { color: var(--amber); }
   #bubble .w.done { color: #cfc6d6; }
@@ -118,6 +119,13 @@
     #cards { gap: 6px; padding-bottom: 10px; }
   }
   @media (max-width: 420px) { #title h1 { letter-spacing: 3px; font-size: 44px; } }
+  /* short windows (desktop browsers): smaller face and type so the three answer cards fit without scrolling */
+  @media (max-height: 780px) { :root { --stage: min(var(--side), 32dvh); } #bubble { font-size: 16px; padding: 8px 12px 10px; min-height: 56px; } .card { font-size: 14px; padding: 8px 10px; } #cards { gap: 6px; padding: 6px 14px 10px; } #hud { padding-bottom: 4px; } }
+  /* 01.11 build B: pick the call */
+  #calls { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 380px; }
+  #calls button { font: inherit; font-size: 13px; color: var(--ink); background: #2b2233; border: 1px solid #4a3b55; border-radius: 14px; padding: 5px 11px; cursor: pointer; }
+  #calls button.on { border-color: var(--neon); color: var(--neon); }
+  #who { color: var(--amber); }
 </style>
 </head>
 <body>
@@ -128,6 +136,8 @@
     <h1>LA ABUELA</h1>
     <p data-t="slogan"></p>
     <div class="how" data-t="how"></div>
+    <div class="how" id="who"></div>
+    <div id="calls"></div>
     <button class="btn ring" id="answer"></button>
     <div class="how" id="best"></div>
     <div id="langs"><button data-lang="es">ES</button><button data-lang="en">EN</button><button data-lang="uk">UK</button></div>
@@ -163,6 +173,7 @@
     <div class="row">
       <button class="btn" id="again"></button>
       <button class="btn ghost" id="share"></button>
+      <a class="btn ghost" id="wa" target="_blank" rel="noopener"></a>
     </div>
     <a class="btn donate" id="donate" href="https://tinylobby.itch.io/la-abuela/donate" target="_blank" rel="noopener"></a>
     <footer>La Abuela · Tiny Lobby</footer>
@@ -182,13 +193,15 @@
   <div id="toast"></div>
 </div>
 
+<script src="calls.js"></script>
 <script>
 // La Abuela — prototype of one call (25.10.2026). One scammer, three kinds of cards, two meters.
 // A card: { k: 'd'|'p'|'f'|'t' (stall / ask back / fake data / trap), text, pat, sus, time (seconds), clue, react }
 // The trap looks like the other cards. Choosing it gives the scammer something real and ends the call.
 // 25.10: three languages (Natalia does not read Spanish). Every string is {es, en, uk}; T() picks the current one.
 const LANGS = ['es', 'en', 'uk'];
-let LANG = new URLSearchParams(location.search).get('lang') || localStorage.getItem('abuela_lang') || (navigator.language || 'es').slice(0, 2);
+// 01.11: all our viewers come from Spanish videos, so Spanish is the default; only a Ukrainian browser picks UK (EN stays one tap away)
+let LANG = new URLSearchParams(location.search).get('lang') || localStorage.getItem('abuela_lang') || ((navigator.language || '').startsWith('uk') ? 'uk' : 'es');
 if (!LANGS.includes(LANG)) LANG = 'es';
 const T = (o) => typeof o === 'string' ? o : (o[LANG] ?? o.es);
 
@@ -241,7 +254,14 @@ const UI = {
   clueNoted: { es: 'Pista apuntada: ', en: 'Clue noted: ', uk: 'Підказку записано: ' },
   again: { es: '📞 Otra llamada', en: '📞 Another call', uk: '📞 Ще дзвінок' },
   share: { es: 'Enviar a un amigo', en: 'Send to a friend', uk: 'Надіслати другові' },
+  // 01.11 (GAME_PLAN §3–4): shareable result, WhatsApp for the 45+ audience, donation asked after the win
+  stolenMin: { es: '¡Le has robado ${m} min al estafador!', en: "You've stolen ${m} min from the scammer!", uk: 'Ти вкрав у шахрая ${m} хв!' },
+  waBtn: { es: '👵 Mándaselo a tu abuela', en: '👵 Send it to your grandma', uk: '👵 Надішли своїй бабусі' },
+  shareResult: { es: 'Aguanté ${t} al estafador 👵📱 ¿Tú cuánto aguantarías? Juega gratis:', en: 'I kept the scammer on the line for ${t} 👵📱 How long would you last? Play free:', uk: 'Я протримав шахрая ${t} 👵📱 А ти скільки? Грай безкоштовно:' },
+  donateWin: { es: '☕ La abuela ha ganado. ¿Le invitas a un café? 2 €', en: '☕ Grandma won. Buy her a coffee? 2 €', uk: '☕ Бабуся перемогла. Пригостиш кавою? 2 €' },
   copied: { es: 'Enlace copiado', en: 'Link copied', uk: 'Посилання скопійовано' },
+  whoCalls: { es: '¿Quién llama hoy?', en: 'Who is calling today?', uk: 'Хто дзвонить сьогодні?' },
+  finals: { es: 'Has visto ${n} de ${m} finales', en: 'You have seen ${n} of ${m} endings', uk: 'Ти бачила ${n} з ${m} кінцівок' },
   clues: { es: 'Pistas: ', en: 'Clues: ', uk: 'Підказки: ' },
   noClues: { es: 'Sin pistas. Pregúntale más la próxima vez.', en: 'No clues. Ask him more next time.', uk: 'Без підказок. Наступного разу розпитай його більше.' },
 };
@@ -259,10 +279,10 @@ const OPENINGS = [
                         en: "Grandma… it's me. I can't talk loud. I'm at the police station. I had an accident, it wasn't my fault. I'll put the lawyer on, he'll explain. Don't call Mum yet.",
                         uk: 'Бабусю… це я. Не можу голосно говорити. Я в поліції. Була аварія, я не винен. Зараз передам слухавку адвокату. Тільки мамі поки не дзвони.' },
     cards: [
-      { k: 'd', text: { es: '¿Un accidente? Dios mío. ¿Dónde estás, en qué comisaría? Espera, cojo tus papeles, están en el cajón de los recibos… o en el abrigo. No cuelgues, que los busco.', en: "An accident? Good Lord. Where are you, which station? Hold on, I'll get your papers, they're in the drawer with the receipts… or in my coat. Don't hang up, I'm looking.", uk: 'В аварії? Господи. Де ти, у якому відділку? Зараз, я візьму твої документи, вони в шухляді з квитанціями… чи в пальті. Не клади слухавку, я шукаю.' },
-        pat: -10, sus: 0, time: 40, react: { es: 'Abuela, no hacen falta papeles. Escucha al abogado y ya.', en: "Grandma, you don't need papers. Just listen to the lawyer.", uk: 'Бабусю, не треба документів. Просто послухай адвоката.' } },
       { k: 'p', text: { es: '¿Cuál de mis nietos? No tienes tu voz.', en: "Which of my grandsons? That's not your voice.", uk: 'Котрий з онуків? Голос у тебе не твій.' },
         pat: -5, sus: 10, time: 15, flag: 'mayor', react: { es: 'El mayor. Estoy resfriado, abuela. Soy el mayor.', en: "The eldest. I've got a cold, Grandma. It's the eldest.", uk: 'Старший. Я застуджений, бабусю. Це старший.' } },
+      { k: 'd', text: { es: '¿Un accidente? Dios mío. ¿Dónde estás, en qué comisaría? Espera, cojo tus papeles, están en el cajón de los recibos… o en el abrigo. No cuelgues, que los busco.', en: "An accident? Good Lord. Where are you, which station? Hold on, I'll get your papers, they're in the drawer with the receipts… or in my coat. Don't hang up, I'm looking.", uk: 'В аварії? Господи. Де ти, у якому відділку? Зараз, я візьму твої документи, вони в шухляді з квитанціями… чи в пальті. Не клади слухавку, я шукаю.' },
+        pat: -10, sus: 0, time: 40, react: { es: 'Abuela, no hacen falta papeles. Escucha al abogado y ya.', en: "Grandma, you don't need papers. Just listen to the lawyer.", uk: 'Бабусю, не треба документів. Просто послухай адвоката.' } },
       { k: 'f', text: { es: 'Claro, hijo. Solo que tengo un papel en la nevera que dice «NIETO EN APUROS = NO PAGAR». Lo puso tu madre. Dime la cuenta, que lo apunto encima.', en: "Of course, sweetheart. Only there's a note on my fridge that says 'GRANDSON IN TROUBLE = DON'T PAY'. Your mum put it there. Tell me the account, I'll write it right over it.", uk: 'Звісно, любий. Тільки в мене на холодильнику папірець: «ОНУК У БІДІ — НЕ ПЛАТИ». Це твоя мама повісила. Диктуй рахунок, я прямо поверх напишу.' },
         pat: 10, sus: 5, time: 20, clue: 'cuenta', react: { es: '…Apunta: ES21 0049… Y quita ese papel.', en: '…Write it down: ES21 0049… And take that note down.', uk: '…Диктую: ES21 0049… І зірви той папірець.' } },
     ] },
@@ -356,6 +376,14 @@ const ENDINGS = {
             text: { es: 'Eran los números de verdad. Dos mil euros menos en la cuenta, y el estafador ya está llamando a la siguiente abuela.', en: 'Those were the real numbers. Two thousand euros gone from the account, and the scammer is already calling the next grandma.', uk: 'Це були справжні цифри. Мінус дві тисячі євро з рахунку, а шахрай уже дзвонить наступній бабусі.' } },
 };
 
+// 01.11 build B: several calls. The original call keeps its openings/beats; the Shorts' calls come from calls.js (tools/abuela_calls.py).
+const CALLS = { nieto: { title: { es: 'El nieto en comisaría', en: 'The grandson at the station', uk: 'Онук у поліції' }, openings: OPENINGS, beats: BEATS } };
+for (const [k, c] of Object.entries(window.CALLS_EXTRA || {})) {
+  const first = { say: (s) => c.openings[s.opening].say, cards: (s) => c.openings[s.opening].cards, look: c.look, who: c.who };
+  CALLS[k] = { title: c.title, openings: c.openings, loop: c.loop, beats: [first, ...c.beats.map((b) => ({ ...b, who: c.who, look: c.look }))] };
+}
+const CALL_KEYS = Object.keys(CALLS);
+let CUR = CALLS.nieto, PICK = CALL_KEYS[Math.floor(Math.random() * CALL_KEYS.length)];   // the chip highlighted on the title screen (random at first)
 const $ = (id) => document.getElementById(id);
 // ---- sounds (WebAudio, no files): the phone rings on the title screen, a busy tone closes the call ----
 let actx = null;
@@ -384,8 +412,11 @@ function applyLang() {
   document.documentElement.lang = LANG; localStorage.setItem('abuela_lang', LANG);
   for (const el of document.querySelectorAll('[data-t]')) el.textContent = T(UI[el.dataset.t]);
   $('answer').textContent = T(UI.answer); $('again').textContent = T(UI.again); $('share').textContent = T(UI.share);
-  $('donate').textContent = T(UI.donate); $('donate2').textContent = T(UI.donate); $('donate3').textContent = T(UI.donate);
+  if ($('end').style.display !== 'flex' || !S || !S.ended || ENDINGS[S.ended].bad) $('donate').textContent = T(UI.donate);
+  $('donate2').textContent = T(UI.donate); $('donate3').textContent = T(UI.donate);
   $('help-text').innerHTML = T(UI.help); $('help-close').textContent = T(UI.helpClose);
+  $('who').textContent = T(UI.whoCalls); const box = $('calls'); box.innerHTML = '';
+  for (const k of CALL_KEYS) { const b = document.createElement('button'); b.textContent = T(CALLS[k].title); b.className = k === PICK ? 'on' : ''; b.onclick = () => { PICK = k; applyLang(); }; box.appendChild(b); }
   for (const b of document.querySelectorAll('#langs button, .set-langs button')) b.classList.toggle('on', b.dataset.lang === LANG);
   $('opt-voice').classList.toggle('on', VOICE_ON); $('opt-sfx').classList.toggle('on', SFX_ON);
   try {   // best result so far, per device
@@ -393,7 +424,13 @@ function applyLang() {
     $('best').textContent = st.best ? `${T(UI.best)}: ${fmt(st.best)}` + (st.manolo ? ` · ${T(UI.manoloN)}: ${st.manolo}` : '') : '';
   } catch { $('best').textContent = ''; }
 }
-function fresh() { return { pat: PAT0, sus: 0, time: 0, clues: [], flags: {}, beat: 0, busy: false, opening: Math.floor(Math.random() * OPENINGS.length) }; }
+// 01.11 Natalia: «1-й звонок рандом — не важно, внук или другой» — the opening is random every time
+// build C: the scammer's idle face on the stage follows the call (calls.js `loop` = the opening line's lip clip)
+function setLoop(call) {
+  const v = $('v-est'), src = (CALLS[call] && CALLS[call].loop) || 'art/estafador_talk.mp4';
+  LOOPS['v-est'] = src; if (!v.src.endsWith(src)) { v.src = src; v.loop = true; v.load(); }
+}
+function fresh(call) { CUR = CALLS[call] || CALLS.nieto; setLoop(CALLS[call] ? call : 'nieto'); return { call: CALLS[call] ? call : 'nieto', pat: PAT0, sus: 0, time: 0, clues: [], flags: {}, beat: 0, busy: false, opening: Math.floor(Math.random() * CUR.openings.length) }; }
 function fmt(t) { return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
 function hud() {
   $('pat').querySelector('i').style.width = Math.max(0, Math.min(100, S.pat)) + '%';
@@ -455,6 +492,10 @@ function highlight(a) {
 function track(path) {
   try {
     if (navigator.doNotTrack === '1' || location.protocol === 'file:' || /^(localhost|127\.)/.test(location.hostname)) return;
+    // 01.11: our own test runs must not count. Opening the game once with ?nocount remembers it on this browser (?count turns it back on).
+    if (/[?&]nocount\b/.test(location.search)) localStorage.setItem('abuela_nocount', '1');
+    if (/[?&]count\b/.test(location.search)) localStorage.removeItem('abuela_nocount');
+    if (localStorage.getItem('abuela_nocount')) return;
     const p = '/abuela/' + LANG + path, ref = (document.referrer || '').split('?')[0];
     new Image().src = 'https://nightdesk.goatcounter.com/count?p=' + encodeURIComponent(p) + '&t=' + encodeURIComponent('La Abuela ' + p) + (ref ? '&r=' + encodeURIComponent(ref) : '') + '&rnd=' + Date.now();
   } catch {}
@@ -484,7 +525,7 @@ function tick(from, to) {   // the stolen seconds count up one by one
 const cardText = (c) => T(typeof c.text === 'function' ? c.text(S) : c.text);
 
 function renderCards() {
-  const beat = BEATS[S.beat]; const box = $('cards'); box.innerHTML = ''; box.dataset.label = T(UI.yourAnswer);
+  const beat = CUR.beats[S.beat]; const box = $('cards'); box.innerHTML = ''; box.dataset.label = T(UI.yourAnswer);
   const cards = (typeof beat.cards === 'function' ? beat.cards(S) : beat.cards).filter((c) => !c.manolo || S.clues.length === 3);
   cards.forEach((c, i) => {
     const b = document.createElement('button'); b.className = 'card';
@@ -500,29 +541,31 @@ async function play(c) {
   const line = cardText(c); show('abuela', line); const spoke = speak(line);
   if (c.trap) { await wait(1400); return ending('trap'); }
   if (c.manolo) { await wait(1400); return ending('manolo'); }
+  if (c.end) { await wait(1400); return ending(c.end); }   // build B: the punch card of a Shorts call ends it
   const t0 = S.time; S.time += c.time; S.pat += c.pat; S.sus += c.sus;
+  if (Math.floor(S.time / 60) > Math.floor(t0 / 60)) setTimeout(() => toast(T(UI.stolenMin).replace('${m}', Math.floor(S.time / 60))), 900);
   if (c.flag) S.flags[c.flag] = true;
   await tick(t0, S.time); hud(); await spoke;
   if (c.clue && !S.clues.includes(c.clue)) { S.clues.push(c.clue); hud(); toast(T(UI.clueNoted) + T(CLUES[c.clue])); await wait(900); }
   if (S.pat <= 0) { await wait(500); return ending('hangup'); }
   if (S.sus >= SUS_MAX) { await wait(500); return ending('caught'); }
-  await wait(600); show(BEATS[S.beat].who || 'est', c.react, true);
+  await wait(600); show(CUR.beats[S.beat].who || 'est', c.react, true);
   // with a voice file the line stays until it is spoken (plus a beat); without one, for the reading time
   const r = T(c.react); await hold(speak(r));
   S.beat++;
-  if (S.beat >= BEATS.length) return ending('outlasted');
+  if (S.beat >= CUR.beats.length) return ending('outlasted');
   nextBeat();
 }
 function nextBeat() {
-  S.busy = false; const b = BEATS[S.beat]; const look = typeof b.look === 'function' ? b.look(S) : b.look;
+  S.busy = false; const b = CUR.beats[S.beat]; const look = typeof b.look === 'function' ? b.look(S) : b.look;
   $('stage').className = look ? 'look-' + look : '';
-  const l = T(b.say(S)); show(b.who || 'est', l); speak(l); renderCards();
+  const l = T(typeof b.say === 'function' ? b.say(S) : b.say); show(b.who || 'est', l); speak(l); renderCards();   // build B: calls.js beats carry plain objects
 }
 
 function ending(kind) {
   const e = ENDINGS[kind]; S.ended = kind;
   if (kind !== 'trap') busyTone();
-  track('/end/' + kind + '/' + fmt(S.time));
+  track('/end/' + kind + '/' + S.call + '/' + fmt(S.time));
   $('call').style.display = 'none'; $('end').style.display = 'flex';
   $('end-title').textContent = T(e.t); $('end-title').className = e.bad ? 'bad' : '';
   $('end-img').src = kind === 'caught' ? 'art/jefe.png' : kind === 'trap' ? 'art/estafador.png' : 'art/abuela.png'; $('end-img').className = e.bad ? 'bad' : '';
@@ -531,21 +574,26 @@ function ending(kind) {
   $('end-clues').textContent = S.clues.length ? T(UI.clues) + S.clues.map((c) => T(CLUES[c])).join(' · ') : T(UI.noClues);
   const tip = kind === 'manolo' ? UI.tipManolo : kind === 'trap' ? UI.tipTrap : kind === 'caught' ? UI.tipCaught : S.clues.length === 3 ? UI.tipManoloNext : UI.tipClues;
   $('end-tip').textContent = T(tip).replace('${n}', 3 - S.clues.length);
+  $('donate').textContent = T(e.bad ? UI.donate : UI.donateWin);
+  const res = T(UI.shareResult).replace('${t}', kind === 'trap' ? '0:00' : fmt(S.time));
+  $('wa').textContent = T(UI.waBtn); $('wa').href = 'https://wa.me/?text=' + encodeURIComponent(res + ' https://tinylobby.itch.io/la-abuela');
   try {
     const st = JSON.parse(localStorage.getItem('abuela_stats') || '{}'); st[kind] = (st[kind] || 0) + 1; st.tries = (st.tries || 0) + 1;
     st.best = Math.max(st.best || 0, kind === 'trap' ? 0 : S.time); if (kind === 'manolo' && !st.manoloAt) st.manoloAt = st.tries;
     localStorage.setItem('abuela_stats', JSON.stringify(st));
-    $('end-attempt').textContent = `${T(UI.attempt)} ${st.tries}` + (st.best ? ` · ${T(UI.best)}: ${fmt(st.best)}` : '') + (st.manoloAt ? ` · Manolo: #${st.manoloAt}` : '');
+    st.seen = [...new Set([...(st.seen || []), kind])]; localStorage.setItem('abuela_stats', JSON.stringify(st));
+    $('end-attempt').textContent = `${T(UI.attempt)} ${st.tries}` + (st.best ? ` · ${T(UI.best)}: ${fmt(st.best)}` : '') + (st.manoloAt ? ` · Manolo: #${st.manoloAt}` : '') + ` · ${T(UI.finals).replace('${n}', st.seen.length).replace('${m}', Object.keys(ENDINGS).length)}`;
   } catch { $('end-attempt').textContent = ''; }
   applyLang();
 }
 
-function start() {
-  S = fresh(); hud();
+function start(call) {
+  S = fresh(call || PICK); PICK = S.call; hud();
   $('title').style.display = 'none'; $('end').style.display = 'none'; $('call').style.display = 'flex';
   track('/start'); nextBeat();
 }
-$('answer').onclick = () => { ringStop(); start(); }; $('again').onclick = start;
+$('answer').onclick = () => { ringStop(); start(PICK); };
+$('again').onclick = () => start(CALL_KEYS[(CALL_KEYS.indexOf(S.call) + 1) % CALL_KEYS.length]);   // «Otra llamada» = the next story
 document.addEventListener('pointerdown', () => { if ($('title').style.display !== 'none' && !ringTimer) ringStart(); }, { once: true });
 for (const b of document.querySelectorAll('#langs button, .set-langs button')) b.onclick = () => { LANG = b.dataset.lang; applyLang(); };
 // ---- menu (like Night Desk's settings) ----
@@ -560,7 +608,7 @@ $('m-help').onclick = () => { menuToggle(false); $('help').hidden = false; };
 $('help-close').onclick = () => { $('help').hidden = true; };
 $('share').onclick = async () => {   // 25.10 Natalia: send friends the game link, not the result (also used from the menu)
   const url = 'https://tinylobby.itch.io/la-abuela';   // 26.10 Natalia: sharing always points at the itch page
-  const txt = 'La Abuela 👵📞 ' + T(UI.slogan);
+  const txt = (S && S.ended && $('end').style.display === 'flex') ? T(UI.shareResult).replace('${t}', S.ended === 'trap' ? '0:00' : fmt(S.time)) : 'La Abuela 👵📞 ' + T(UI.slogan);
   // phone: the system share sheet (WhatsApp, Telegram…); desktop: the link goes to the clipboard
   if (navigator.share) { try { await navigator.share({ title: 'La Abuela', text: txt, url }); return; } catch {} }
   try { await navigator.clipboard.writeText(url); toast(T(UI.copied)); } catch { toast(url); }
@@ -571,7 +619,7 @@ document.addEventListener('keydown', (e) => {
   if (n >= 1 && n <= bs.length) bs[n - 1].click();
 });
 applyLang();
-if (new URLSearchParams(location.search).has('start')) start();   // ?start opens straight on the call (screenshots, tests)
+{ const q = new URLSearchParams(location.search); if (q.has('start')) start(q.get('call') || PICK); }   // ?start opens straight on the call (screenshots, tests)
 { const w = +new URLSearchParams(location.search).get('w'); if (w) $('app').style.width = w + 'px'; }   // ?w=390 previews a phone width on a desktop
 </script>
 </body>

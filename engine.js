@@ -57,15 +57,15 @@ const UI = {
   week: { en: 'week', ru: 'за неделю', uk: 'за тиждень', es: 'semana' },
   // 19.10: a player on intfiction finished a night and could not tell whether he had done well.
   // These three lines say, in plain words, what the numbers above mean.
-  standMargin: { en: '${n} more problems and Sal lets you go.', ru: 'Ещё ${n} проблемы, и Сэл вас уволит.', uk: 'Ще ${n} проблеми, і Сел вас звільнить.', es: '${n} problemas más y Sal le despide.' },
-  standLast: { en: 'One more problem and Sal lets you go.', ru: 'Ещё одна проблема, и Сэл вас уволит.', uk: 'Ще одна проблема, і Сел вас звільнить.', es: 'Un problema más y Sal le despide.' },
-  standClean: { en: 'Nothing Sal can pin on you yet.', ru: 'Пока Сэлу не за что зацепиться.', uk: 'Поки Селу немає за що зачепитися.', es: 'De momento Sal no tiene nada contra usted.' },
-  standSpend: { en: 'What you kept, you spend in the morning.', ru: 'Что осталось, потратите утром.', uk: 'Що лишилося, витратите вранці.', es: 'Lo que ha guardado, lo gasta por la mañana.' },
-  // 20.10: plain-words verdict, so the player knows whether the night went well and what exactly went wrong (first player review)
-  verdictLight: { en: 'Tonight went your way.', ru: 'Эта ночь прошла в вашу пользу.', uk: 'Ця ніч минула на вашу користь.', es: 'Esta noche salió a su favor.' },
-  verdictDark: { en: 'Tonight will come back to you.', ru: 'Эта ночь ещё аукнется.', uk: 'Ця ніч ще відгукнеться.', es: 'Esta noche le pasará factura.' },
-  wrongTonight: { en: 'What went wrong tonight: ${l}.', ru: 'Что пошло не так этой ночью: ${l}.', uk: 'Що пішло не так цієї ночі: ${l}.', es: 'Lo que salió mal esta noche: ${l}.' },
-  wrongNone: { en: 'Nothing tonight that Sal can count against you.', ru: 'Этой ночью ничего, что Сэл мог бы вам зачесть.', uk: 'Цієї ночі нічого, що Сел міг би вам зарахувати.', es: 'Esta noche, nada que Sal pueda contarle en contra.' },
+  // 08.11: the night's summary is one short paragraph (Natalia: the old stacked lines read as mechanical and disconnected)
+  sumMade: { en: 'You made ${m} tonight.', ru: 'За ночь вы заработали ${m}.', uk: 'За ніч ви заробили ${m}.', es: 'Esta noche ha ganado ${m}.' },
+  sumCost: { en: 'Tonight cost you ${m}.', ru: 'Эта ночь обошлась вам в ${m}.', uk: 'Ця ніч обійшлася вам у ${m}.', es: 'Esta noche le ha costado ${m}.' },
+  sumEmpty: { en: 'Nothing in the register tonight.', ru: 'В кассе за ночь пусто.', uk: 'У касі за ніч порожньо.', es: 'La caja está vacía esta noche.' },
+  sumFrom: { en: 'The trouble came from ${l}.', ru: 'Неприятности этой ночи: ${l}.', uk: 'Неприємності цієї ночі: ${l}.', es: 'Los problemas de esta noche: ${l}.' },
+  sumNoNew: { en: 'No new trouble tonight.', ru: 'Новых проблем этой ночью нет.', uk: 'Нових проблем цієї ночі немає.', es: 'Sin problemas nuevos esta noche.' },
+  sumClean: { en: 'Sal has nothing on you.', ru: 'У Сэла на вас ничего нет.', uk: 'У Села на вас нічого немає.', es: 'Sal no tiene nada contra usted.' },
+  sumLast: { en: 'One more problem and Sal lets you go.', ru: 'Ещё одна проблема, и Сэл вас уволит.', uk: 'Ще одна проблема, і Сел вас звільнить.', es: 'Un problema más y Sal le despide.' },
+  sumMargin: { en: '${n} more problems and Sal lets you go.', ru: 'Ещё ${n} проблемы, и Сэл вас уволит.', uk: 'Ще ${n} проблеми, і Сел вас звільнить.', es: '${n} problemas más y Sal le despide.' },
   you: { en: 'YOU', ru: 'ВЫ', uk: 'ВИ', es: 'USTED' },
   next: { en: '▸ Continue', ru: '▸ Дальше', uk: '▸ Далі', es: '▸ Continuar' },
   nextNight: { en: '▸ Next night', ru: '▸ Следующая ночь', uk: '▸ Наступна ніч', es: '▸ Siguiente noche' },
@@ -84,6 +84,7 @@ const UI = {
   genderHint: { en: 'The story will speak to you as her or as him. You can change it any time in ⚙.', ru: 'История будет обращаться к вам как к ней или к нему. Поменять можно в любой момент в ⚙.', uk: 'Історія звертатиметься до вас як до неї або до нього. Змінити можна будь-коли в ⚙.', es: 'La historia se dirigirá a usted como ella o como él. Puede cambiarlo cuando quiera en ⚙.' },
   debtCarry: { en: 'You start the shift ${n} in debt from the week.', ru: 'Вы начинаете смену с долгом ${n} за неделю.', uk: 'Ви починаєте зміну з боргом ${n} за тиждень.', es: 'Empieza el turno con una deuda de ${n} de la semana.' },
   notebook: { en: 'Notebook', ru: 'Блокнот', uk: 'Блокнот', es: 'Libreta' },
+  knownNow: { en: 'What you know now', ru: 'Что вы теперь знаете', uk: 'Що ви тепер знаєте', es: 'Lo que ahora sabe' },
   notebookTitle: { en: 'The clerk’s notebook', ru: 'Блокнот портье', uk: 'Блокнот портьє', es: 'La libreta del recepcionista' },
   notebookEmpty: { en: 'Nothing written yet. Every answer you give at the desk goes here.', ru: 'Пока пусто. Сюда записывается каждый ваш ответ за стойкой.', uk: 'Поки порожньо. Сюди записується кожна ваша відповідь за стійкою.', es: 'Todavía no hay nada. Aquí queda cada respuesta que da en el mostrador.' },
   remembered: { en: 'This will be remembered.', ru: 'Это запомнят.', uk: 'Це запам’ятають.', es: 'Esto se recordará.' },
@@ -300,7 +301,15 @@ function rateButton() {
 function voHash(t) { let h = 5381; for (const ch of t) h = (Math.imul(h, 33) ^ ch.codePointAt(0)) >>> 0; return h.toString(16).padStart(8, '0'); }
 let voAudio = null, voTimer = null, voToken = 0;
 const voPacks = {};   // one <audio> per packed night file, reused so it loads once
-function stopVoice() { voToken++; clearInterval(voTimer); if (voAudio) voAudio.pause(); voAudio = null; }
+let voAfter = null;   // 08.11: what to play when the current recorded line ends (the ending reads its summary aloud)
+function stopVoice() { voToken++; voAfter = null; clearInterval(voTimer); if (voAudio) voAudio.pause(); voAudio = null; }
+// Reads several lines one after another: the recorded voice where it exists, the browser voice otherwise.
+function voSequence(texts) {
+  const [t, ...rest] = texts.filter(Boolean);
+  if (!t) return;
+  const next = rest.length ? () => voSequence(rest) : null;
+  if (playVoiceLine(t)) voAfter = next; else speak(t, 'narr', null, next);
+}
 function playVoiceLine(text) {
   stopVoice();
   if (!VOICE_ON || !HAS_AUDIO || !unlocked || !VO_SHIP.includes(LANG) || typeof VO_FILES === 'undefined') return false;
@@ -322,6 +331,8 @@ function playVoiceLine(text) {
     clearInterval(voTimer); a.pause();
     if (cueAudio) fadeTo(cueAudio, CUE_VOL, 800);
     voAudio = null;
+    const after = voAfter; voAfter = null;
+    if (after) return after();
     if (cueQueue.length && !cuesPlaying) return setTimeout(() => playCue(cueQueue.shift()), 250);
     if (!cuesPlaying && bed) fadeTo(bed, BED_VOL, 1800);
   };
@@ -338,10 +349,10 @@ function pickVoice(lang, gender) {
   }
   return voices.find((v) => v.lang.replace('_', '-') === tag) || voices.find((v) => v.lang.startsWith(lang)) || null;
 }
-function speak(text, who, profile) {
-  if (!window.speechSynthesis) return;
+function speak(text, who, profile, onend) {
+  if (!window.speechSynthesis) { if (onend) setTimeout(onend, 0); return; }
   speechSynthesis.cancel();
-  if (!TTS_ON || !VOICE_ON || !text) return;
+  if (!TTS_ON || !VOICE_ON || !text) { if (onend) setTimeout(onend, 0); return; }
   const p = who === 'guest' && profile ? profile : NARRATOR;
   const u = new SpeechSynthesisUtterance(text);
   u.lang = VOICE_LANG[LANG];
@@ -349,6 +360,7 @@ function speak(text, who, profile) {
   const mismatch = v && p.gender === 'm' && VOICE_PREF[LANG].m[0] === VOICE_PREF[LANG].f[0];
   u.pitch = mismatch ? Math.max(0.1, p.pitch - 0.25) : p.pitch;
   u.rate = p.rate;
+  if (onend) u.onend = u.onerror = () => onend();
   speechSynthesis.speak(u);
 }
 function renderVoice() { $('voice').classList.toggle('on', VOICE_ON); $('audio').classList.toggle('on', AUDIO_ON); }
@@ -546,7 +558,7 @@ function resumeMid() {
   Object.assign(state, { night: m.night, idx: m.idx, cash: m.cash, trouble: m.trouble, troubleLog: m.troubleLog, fines: m.fines, flags: m.flags, clock: m.clock, notes: m.notes || sv.notes || [], firedBroke: undefined });
   document.body.classList.remove('is-morning'); $('title').hidden = true; $('credits').hidden = true; $('game').hidden = false;
   $('dialog').innerHTML = '<div class="speaker" id="speaker"></div><div class="line" id="line"></div>'; rebind();
-  $('scene').classList.toggle('dry', NIGHT.id === 2); $('scene').classList.remove('fired-scene');
+  $('scene').classList.toggle('dry', NIGHT.id === 2); $('scene').classList.remove('fired-scene', 'ending-scene');
   motifsThisNight = new Set(); playBed(NIGHT_BEDS[m.night] || NIGHT_BEDS[NIGHT_BEDS.length - 1]);
   renderStats();
   if (m.node === '__next' || !NIGHT.scenes[m.idx - 1]) { nextScene(); return true; }
@@ -672,7 +684,7 @@ function startNightObj(nightObj, n, saveOverride) {
   rebind();
   renderStats();
   motifsThisNight = new Set();
-  $('scene').classList.remove('fired-scene');
+  $('scene').classList.remove('fired-scene', 'ending-scene');
   if (ANIMATE && typeof Image === 'function') NIGHT.scenes.forEach((sc) => { new Image().src = `art/${artSlug(sc)}.jpg`; }); // no pop-in on slow connections
   $('scene').classList.toggle('dry', NIGHT.id === 2); // night two: 'The rain has stopped'
   rainBurst(9000);
@@ -686,12 +698,20 @@ function startNightObj(nightObj, n, saveOverride) {
 }
 function rebind() { speakerEl = $('speaker'); lineEl = $('line'); }
 
+// 07.11: one or two solid facts per night (story/facts.js), so the mystery has ground under it
+function knownLines(n, flags) {
+  if (typeof KNOWN === 'undefined' || !KNOWN[n]) return [];
+  return KNOWN[n](flags || {}).filter(Boolean).map(T);
+}
+function knownBlock(n, flags) {
+  const ls = knownLines(n, flags);
+  return ls.length ? `<div class="known"><h4>${T(UI.knownNow)}</h4>${ls.map((l) => `<p>${l}</p>`).join('')}</div>` : '';
+}
 function ending() {
   if (state.trouble >= TROUBLE_MAX && state.firedBroke === undefined) return salCollects();
   const key = NIGHT.pickEnding(state);
   const e = typeof NIGHT.endings[key] === 'function' ? NIGHT.endings[key](state) : NIGHT.endings[key];
   const [title, text] = (e[LANG] ?? e.en).map(G);
-  if (!playVoiceLine(text)) speak(text, 'narr');
   playCue(state.trouble >= TROUBLE_MAX ? 'sting_fired' : LIGHT_ENDINGS.has(key) ? 'sting_ending_light' : 'sting_ending_dark');
   const isFired = state.trouble >= TROUBLE_MAX;
   track('/night' + (state.night + 1) + '/end/' + (isFired ? 'fired' : key));
@@ -703,24 +723,28 @@ function ending() {
   }
   const prevTotal = (loadSave() || {}).totalCash || 0;
   const coda = NIGHT.coda ? `<p class="coda">${T(NIGHT.coda(prevTotal + state.cash, key, state))}</p>` : '';
-  // plain-words standing, so the night does not end on bare numbers
-  const standingLine = () => {
-    const left = TROUBLE_MAX - state.trouble;
-    if (left <= 0) return '';
-    if (state.trouble === 0) return T(UI.standClean);
-    return left === 1 ? T(UI.standLast) : T(UI.standMargin).replace('${n}', left);
-  };
-  // what went wrong tonight, by scene name, and whether the ending lands softly
-  const wrongLine = () => {
+  // 08.11: one plain paragraph: money, where tonight's trouble came from, how much room is left
+  const summary = () => {
+    const parts = [], read = [];
+    parts.push(state.cash > 0 ? T(UI.sumMade).replace('${m}', fmtMoney(state.cash)) : state.cash < 0 ? T(UI.sumCost).replace('${m}', fmtMoney(-state.cash)) : T(UI.sumEmpty));
     const names = [...new Set((state.troubleLog || []).filter((x) => x.night === state.night && x.name).map((x) => T(x.name)))];
-    return names.length ? T(UI.wrongTonight).replace('${l}', names.join(', ')) : T(UI.wrongNone);
+    if (names.length) parts.push(T(UI.sumFrom).replace('${l}', names.join(', ')));
+    else if (state.trouble > 0) parts.push(T(UI.sumNoNew));
+    const left = TROUBLE_MAX - state.trouble;
+    const margin = state.trouble === 0 ? T(UI.sumClean) : left === 1 ? T(UI.sumLast) : T(UI.sumMargin).replace('${n}', left);
+    parts.push(margin); read.push(margin);   // the money is on screen; the narrator reads the standing and the facts
+    return { html: parts.join(' '), read };
   };
-  const verdict = T(LIGHT_ENDINGS.has(key) ? UI.verdictLight : UI.verdictDark);
+  const sum = isFired ? { html: '', read: [] } : summary();
   const why = isFired && (state.troubleLog || []).length
     ? `<div class="why"><h4>${T(UI.firedWhy)}</h4><ul>${state.troubleLog.map((t) => `<li>${T(UI.nightN)} ${t.night + 1}${t.name ? ' · ' + T(t.name) : ''}</li>`).join('')}</ul></div>` : '';
   const stamp = isFired ? `<div class="stamp">${T(UI.fired)}</div>` : '';
   const broke = isFired && state.firedBroke ? `<p class="broke">${T(UI.salFineBroke).replace('${n}', state.firedBroke)}</p>` : '';
-  $('dialog').innerHTML = `<div class="ending${isFired ? ' fired' : ''}">${stamp}<h2>${title}</h2><p>${text}</p>${broke}${why}${coda}<p class="delta">${fmtMoney(state.cash)} ${T(UI.tonight)} · ${fmtMoney(prevTotal + state.cash)} ${T(UI.week)} · ${T(UI.trouble)} ${state.trouble}/${TROUBLE_MAX}</p>${isFired ? '' : `<p class="verdict">${verdict}</p><p class="standing">${wrongLine()} ${standingLine()} ${T(UI.standSpend)}</p>`}</div>`;
+  const isSecretNight = typeof SECRET_NIGHT !== 'undefined' && NIGHT === SECRET_NIGHT;
+  const delta = `<p class="delta">${fmtMoney(state.cash)} ${T(UI.tonight)} · ${fmtMoney(prevTotal + state.cash)} ${T(UI.week)} · ${T(UI.trouble)} ${state.trouble}/${TROUBLE_MAX}</p>`;
+  $('dialog').innerHTML = `<div class="ending${isFired ? ' fired' : ''}">${stamp}<h2>${title}</h2><p class="story">${text}</p>${broke}${why}${coda}${isFired ? delta : `<p class="summary">${sum.html}</p>${isSecretNight ? '' : knownBlock(state.night, state.flags)}${delta}`}</div>`;
+  if (!isFired) $('scene').classList.add('ending-scene');   // 08.11 Natalia: blur the lobby behind the night's result
+  voSequence([text, ...sum.read, ...(isFired || isSecretNight ? [] : knownLines(state.night, state.flags))]);
   current = { scene: null, node: null };
 
   const fired = state.trouble >= TROUBLE_MAX;
@@ -840,8 +864,14 @@ function renderNotebook() {
     const same = i > 0 && T(arr[i - 1].who) === T(x.who);   // one guest, several answers: the name once
     const marks = [x.cash ? `<span class="${x.cash < 0 ? 'nb-bad' : 'nb-cash'}">${x.cash > 0 ? '+' : '−'}$${Math.abs(x.cash)}</span>` : '', x.trouble ? `<span class="nb-bad">+${x.trouble} ${T(UI.trouble)}</span>` : ''].join(' ');
     return `<li${same ? ' class="nb-same"' : ''}>${same ? '' : `<b>${T(x.who)}</b>`}<span class="nb-said">${T(x.said)}</span>${marks.trim() ? `<small>${marks}</small>` : ''}</li>`;
-  }).join('')}</ul></section>`).join('') : `<p class="nb-empty">${T(UI.notebookEmpty)}</p>`);
+  }).join('')}</ul>${nbKnown(n)}</section>`).join('') : `<p class="nb-empty">${T(UI.notebookEmpty)}</p>`);
   const last = box.querySelector('section:last-of-type li:last-child'); if (last) last.scrollIntoView({ block: 'nearest' });
+}
+function nbKnown(n) {   // facts appear in the notebook only for nights already finished
+  const sv = loadSave() || {};
+  if (!sv.results || sv.results[n] === undefined) return '';
+  const ls = knownLines(n, sv.flags || state.flags);
+  return ls.length ? `<div class="nb-known"><b>${T(UI.knownNow)}:</b> ${ls.join(' ')}</div>` : '';
 }
 function toggleNotebook(open = $('notebook').hidden) {
   $('notebook').hidden = !open; $('notebook-btn').setAttribute('aria-expanded', open);
@@ -883,7 +913,7 @@ function askGender(then) {
 function showTitle() {
   if (ANIMATE && !localStorage.getItem('nd_advisory')) return showAdvisory();
   document.body.classList.add('is-menu');
-  if ($('scene')) $('scene').classList.remove('fired-scene');
+  if ($('scene')) $('scene').classList.remove('fired-scene', 'ending-scene');
   document.body.classList.remove('is-morning');
   if (window.speechSynthesis) speechSynthesis.cancel();
   NIGHT = null; current = { scene: null, node: null };

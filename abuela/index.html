@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>La Abuela</title>
-<meta name="description" content="Juego gratis: eres la abuela y te llama un estafador. No cuelgues. 3 minutos, en el móvil.">
+<meta name="description" content="Juego gratis: eres la abuela y te llama un estafador. Siete estafas reales para aprender a reconocerlas riéndote. En el móvil.">
 <link rel="canonical" href="https://tinylobby.itch.io/la-abuela">
 <meta property="og:type" content="website">
 <meta property="og:title" content="La Abuela · juego gratis">
@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://tinylobbygames.github.io/noche/abuela/art/abuela.png">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"VideoGame","name":"La Abuela","description":"Juego gratis en el navegador: eres la abuela y te llama un estafador. Una llamada con voces y 5 finales.","url":"https://tinylobby.itch.io/la-abuela","image":"https://tinylobbygames.github.io/noche/abuela/art/abuela.png","inLanguage":["es","en","uk"],"genre":["Interactive fiction","Comedy"],"gamePlatform":["Web browser","Mobile"],"playMode":"SinglePlayer","isAccessibleForFree":true,"author":{"@type":"Organization","name":"Tiny Lobby","url":"https://tinylobby.itch.io"},"sameAs":["https://www.youtube.com/@tinylobbygames"]}
+{"@context":"https://schema.org","@type":"VideoGame","name":"La Abuela","description":"Juego gratis en el navegador: eres la abuela y te llama un estafador. Siete llamadas con voces basadas en estafas reales; aprende a reconocerlas riéndote.","url":"https://tinylobby.itch.io/la-abuela","image":"https://tinylobbygames.github.io/noche/abuela/art/abuela.png","inLanguage":["es","en","uk"],"genre":["Interactive fiction","Comedy"],"gamePlatform":["Web browser","Mobile"],"playMode":"SinglePlayer","isAccessibleForFree":true,"author":{"@type":"Organization","name":"Tiny Lobby","url":"https://tinylobby.itch.io"},"sameAs":["https://www.youtube.com/@tinylobbygames"]}
 </script>
 <link rel="icon" href="art/abuela.png">
 <meta name="theme-color" content="#0e0b12">
@@ -104,6 +104,8 @@
   .help-box b { color: var(--amber); }
   .help-box .btn { align-self: center; margin-top: 4px; }
   .help-box .support { color: var(--muted); font-size: 14px; line-height: 1.45; border-top: 1px solid #3a2f42; padding-top: 12px; margin: 4px 0 0; }
+  #end .real { color: var(--ink); font-size: 15px; background: #16241c; border-left: 4px solid #5fd08a; border-radius: 8px; padding: 8px 12px; max-width: 360px; }
+  #end .real b { color: #5fd08a; }
   #end .tip { color: var(--ink); font-size: 14px; background: #221a28; border-left: 4px solid var(--amber); border-radius: 8px; padding: 8px 12px; max-width: 360px; }
   #toast { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); background: var(--amber); color: #1a1008; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 9; }
   #toast.on { opacity: 1; }
@@ -176,6 +178,7 @@
     <p id="end-text"></p>
     <p class="muted" id="end-clues"></p>
     <p class="tip" id="end-tip"></p>
+    <p class="real" id="end-real"></p>
     <p class="muted" id="end-attempt"></p>
     <div class="row">
       <button class="btn" id="again"></button>
@@ -212,6 +215,18 @@ let LANG = new URLSearchParams(location.search).get('lang') || localStorage.getI
 if (!LANGS.includes(LANG)) LANG = 'es';
 const T = (o) => typeof o === 'string' ? o : (o[LANG] ?? o.es);
 
+// 12.11 (Natalia: game as anti-scam training for seniors, but short and fun): one real-life line per call on the end screen
+const REAL = {
+  label: { es: 'En la vida real:', en: 'In real life:', uk: 'У житті:' },
+  close: { es: 'Cuelga y llama tú a los tuyos.', en: 'Hang up and call your family yourself.', uk: 'Поклади слухавку й сама подзвони своїм.' },
+  nieto: { es: 'si tu «nieto» no sabe cómo se llama tu perro, no es tu nieto.', en: "if your 'grandson' doesn't know your dog's name, he isn't your grandson.", uk: 'якщо «онук» не знає, як звати твого пса, — це не онук.' },
+  perro: { es: 'la voz se puede copiar; la palabra secreta de la familia, no.', en: "a voice can be copied; your family's secret word can't.", uk: 'голос можна підробити, а сімейне секретне слово — ні.' },
+  paquete: { es: 'ninguna empresa de envíos te llama para cobrarte un paquete que no pediste.', en: "the post office won't phone to charge you for a parcel you never ordered.", uk: 'пошта не дзвонить, щоб узяти гроші за посилку, якої ти не замовляла.' },
+  secuestro: { es: 'gritos, prisa y «no cuelgue» son justo la señal.', en: "screams, hurry and 'don't hang up' are exactly the signal.", uk: 'крики, поспіх і «не кладіть слухавку» — це і є сигнал.' },
+  poli: { es: 'la policía nunca pasa a recoger tus joyas ni tu tarjeta.', en: 'the police never come round to collect your jewellery or your card.', uk: 'поліція ніколи не приходить забрати твої прикраси чи картку.' },
+  chocado: { es: 'nadie paga una fianza por teléfono ni con un mensajero.', en: 'nobody pays bail over the phone or through a courier.', uk: 'заставу не платять телефоном і не передають кур’єром.' },
+  llama: { es: 'prisa, secreto, dinero y códigos: si salen los cuatro, es estafa.', en: 'hurry, secrecy, money and codes: all four together means a scam.', uk: 'поспіх, таємниця, гроші й коди: якщо є всі чотири — це шахрайство.' },
+};
 const UI = {
   slogan: { es: 'Tu trabajo es no colgar.', en: 'Your job is not to hang up.', uk: 'Твоя робота — не класти слухавку.' },
   how: { es: 'Te llama un estafador. No le des nada de verdad. Cada minuto que pierde contigo es un minuto que no roba a nadie.',
@@ -249,7 +264,7 @@ const UI = {
 <p><b>Підказки.</b> Правильними запитаннями витягаєш три речі: рахунок, місто та ім'я. З усіма трьома з'являється картка <b>Маноло</b> — твого онука-поліцейського. Це найкраща кінцівка.</p>
 <p><b>Кінцівки:</b> він поклав слухавку · він тебе розкусив · Маноло бере слухавку · ти дала йому справжнє (мінус 2000 €).</p>`,
   },
-  helpSupport: { es: 'La Abuela la hace una persona, sin estudio ni publicidad. Si te ha hecho reír, añade algo a la pensión de la abuela: así habrá más llamadas.', en: 'La Abuela is made by one person, with no studio and no ads. If it made you laugh, top up Grandma’s pension — that’s how more calls get made.', uk: 'La Abuela робить одна людина, без студії та реклами. Якщо тебе це розсмішило, докинь бабусі до пенсії — так з’являться нові дзвінки.' },
+  helpSupport: { es: 'La Abuela la hace Tiny Lobby, un estudio independiente, sin publicidad. Si te ha hecho reír, añade algo a la pensión de la abuela: así habrá más llamadas.', en: 'La Abuela is made by Tiny Lobby, an independent studio, with no ads. If it made you laugh, top up Grandma’s pension — that’s how more calls get made.', uk: 'La Abuela робить Tiny Lobby, незалежна студія, без реклами. Якщо тебе це розсмішило, докинь бабусі до пенсії — так з’являться нові дзвінки.' },
   attempt: { es: 'Intento nº', en: 'Attempt no.', uk: 'Спроба №' },
   tipClues: { es: 'Para que Manolo se ponga te faltaban ${n} pistas: pregúntale más (la cuenta, la ciudad, el nombre).', en: 'Manolo needed ${n} more clues: ask him more (the account, the city, the name).', uk: 'Щоб покликати Маноло, не вистачило підказок: ${n}. Розпитуй його більше (рахунок, місто, ім’я).' },
   tipManoloNext: { es: 'Tenías las tres pistas: la próxima vez aguanta hasta el final y llama a Manolo.', en: 'You had all three clues: next time hold on to the end and call Manolo.', uk: 'Підказки були всі три: наступного разу протримайся до кінця й поклич Маноло.' },
@@ -581,6 +596,7 @@ function ending(kind) {
   $('end-clues').textContent = S.clues.length ? T(UI.clues) + S.clues.map((c) => T(CLUES[c])).join(' · ') : T(UI.noClues);
   const tip = kind === 'manolo' ? UI.tipManolo : kind === 'trap' ? UI.tipTrap : kind === 'caught' ? UI.tipCaught : S.clues.length === 3 ? UI.tipManoloNext : UI.tipClues;
   $('end-tip').textContent = T(tip).replace('${n}', 3 - S.clues.length);
+  { const r = REAL[S.call] || REAL.nieto; $('end-real').innerHTML = '<b>' + T(REAL.label) + '</b> ' + T(r) + ' ' + T(REAL.close); }
   $('donate').textContent = T(e.bad ? UI.donate : UI.donateWin);
   const res = T(UI.shareResult).replace('${t}', kind === 'trap' ? '0:00' : fmt(S.time));
   $('wa').textContent = T(UI.waBtn); $('wa').href = 'https://wa.me/?text=' + encodeURIComponent(res + ' https://tinylobby.itch.io/la-abuela');

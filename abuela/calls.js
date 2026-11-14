@@ -11,43 +11,57 @@ window.CALLS_EXTRA = {
   "openings": [
    {
     "say": {
-     "es": "¡Mamá, soy yo! He tenido un accidente. Necesito dinero ahora mismo. No cuelgues."
+     "es": "¡Mamá, soy yo! He tenido un accidente. Necesito dinero ahora mismo. No cuelgues.",
+     "en": "Mum, it's me! I've had an accident. I need money right now. Don't hang up.",
+     "uk": "Мамо, це я! Я потрапив в аварію. Мені терміново потрібні гроші. Не клади слухавку."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Tranquilo, hijo. Primero dime cómo se llama el perro."
+       "es": "Tranquilo, hijo. Primero dime cómo se llama el perro.",
+       "en": "Calm down, son. First tell me the dog's name.",
+       "uk": "Спокійно, синку. Спершу скажи, як звати пса."
       },
       "pat": -5,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "…Toby."
+       "es": "…Toby.",
+       "en": "…Toby.",
+       "uk": "…Тобі."
       }
      },
      {
       "k": "d",
       "text": {
-       "es": "Espera, hijo, que me siento, que me tiemblan las piernas. ¿Dónde estás? ¿Te duele algo?"
+       "es": "Espera, hijo, que me siento, que me tiemblan las piernas. ¿Dónde estás? ¿Te duele algo?",
+       "en": "Hold on, son, let me sit down, my legs are shaking. Where are you? Does anything hurt?",
+       "uk": "Зачекай, синку, я сяду, бо ноги трусяться. Де ти? Щось болить?"
       },
       "pat": -10,
       "sus": 0,
       "time": 30,
       "react": {
-       "es": "Mamá, no hay tiempo para eso. Necesito el dinero ya."
+       "es": "Mamá, no hay tiempo para eso. Necesito el dinero ya.",
+       "en": "Mum, there's no time for that. I need the money now.",
+       "uk": "Мамо, на це немає часу. Мені потрібні гроші зараз."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Claro, hijo. Te lo mando a tu cuenta de siempre, la que termina en… ¿en cuánto terminaba?"
+       "es": "Claro, hijo. Te lo mando a tu cuenta de siempre, la que termina en… ¿en cuánto terminaba?",
+       "en": "Of course, son. I'll send it to your usual account, the one ending in… what did it end in?",
+       "uk": "Звісно, синку. Перекажу на твій звичний рахунок, той, що закінчується на… на що він закінчувався?"
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Dímela tú, mamá, que ahora no me acuerdo."
+       "es": "Dímela tú, mamá, que ahora no me acuerdo.",
+       "en": "You tell me, Mum, I can't remember right now.",
+       "uk": "Скажи ти, мамо, бо я зараз не пам’ятаю."
       }
      }
     ]
@@ -56,13 +70,17 @@ window.CALLS_EXTRA = {
   "beats": [
    {
     "say": {
-     "es": "Toby, mamá. El perro. ¿Me mandas el dinero o no?"
+     "es": "Toby, mamá. El perro. ¿Me mandas el dinero o no?",
+     "en": "Toby, Mum. The dog. Are you sending the money or not?",
+     "uk": "Тобі, мамо. Пес. Ти надішлеш гроші чи ні?"
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "No tenemos perro."
+       "es": "No tenemos perro.",
+       "en": "We don't have a dog.",
+       "uk": "У нас немає пса."
       },
       "pat": 0,
       "sus": 0,
@@ -72,25 +90,33 @@ window.CALLS_EXTRA = {
      {
       "k": "d",
       "text": {
-       "es": "Toby… Qué nombre tan raro para un perro. ¿Y de qué raza es, hijo?"
+       "es": "Toby… Qué nombre tan raro para un perro. ¿Y de qué raza es, hijo?",
+       "en": "Toby… What a strange name for a dog. And what breed is he, son?",
+       "uk": "Тобі… Яке дивне ім’я для пса. А якої він породи, синку?"
       },
       "pat": -15,
       "sus": 10,
       "time": 30,
       "react": {
-       "es": "Mamá, por favor, que me detienen."
+       "es": "Mamá, por favor, que me detienen.",
+       "en": "Mum, please, they're going to arrest me.",
+       "uk": "Мамо, будь ласка, мене зараз заарештують."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Vale, vale. Apunta mi cuenta: cuatro, siete, dos… no, eso es el portal."
+       "es": "Vale, vale. Apunta mi cuenta: cuatro, siete, dos… no, eso es el portal.",
+       "en": "All right, all right. Write down my account: four, seven, two… no, that's the door code.",
+       "uk": "Добре, добре. Записуй мій рахунок: чотири, сім, два… ні, це код від під’їзду."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Mamá, concéntrate. Los números de la tarjeta."
+       "es": "Mamá, concéntrate. Los números de la tarjeta.",
+       "en": "Mum, focus. The card numbers.",
+       "uk": "Мамо, зосередься. Номер картки."
       }
      }
     ]
@@ -109,43 +135,57 @@ window.CALLS_EXTRA = {
   "openings": [
    {
     "say": {
-     "es": "Señora, tiene un paquete retenido en la aduana. Para liberarlo solo tiene que pagar una pequeña tasa."
+     "es": "Señora, tiene un paquete retenido en la aduana. Para liberarlo solo tiene que pagar una pequeña tasa.",
+     "en": "Madam, you have a parcel held at customs. To release it you only need to pay a small fee.",
+     "uk": "Пані, ваша посилка затримана на митниці. Щоб її забрати, треба лише сплатити невеликий збір."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "¿Un paquete? Tráemelo tú, hijo. Calle Mayor, tres. Pregunta por Manolo."
+       "es": "¿Un paquete? Tráemelo tú, hijo. Calle Mayor, tres. Pregunta por Manolo.",
+       "en": "A parcel? Bring it round yourself, son. Number three, High Street. Ask for Manolo.",
+       "uk": "Посилка? То привези її сам, синку. Головна вулиця, три. Спитай Маноло."
       },
       "pat": -5,
       "sus": 10,
       "time": 20,
       "react": {
-       "es": "…¿Quién es Manolo?"
+       "es": "…¿Quién es Manolo?",
+       "en": "…Who's Manolo?",
+       "uk": "…Хто такий Маноло?"
       }
      },
      {
       "k": "d",
       "text": {
-       "es": "Un paquete… ¿Y quién me manda a mí un paquete? Espere, que le pregunto a la vecina."
+       "es": "Un paquete… ¿Y quién me manda a mí un paquete? Espere, que le pregunto a la vecina.",
+       "en": "A parcel… And who'd be sending me a parcel? Hold on, I'll ask the neighbour.",
+       "uk": "Посилка… А хто ж мені посилки шле? Зачекайте, спитаю в сусідки."
       },
       "pat": -10,
       "sus": 0,
       "time": 35,
       "react": {
-       "es": "Señora, es urgente. Solo la tasa y el paquete sale hoy."
+       "es": "Señora, es urgente. Solo la tasa y el paquete sale hoy.",
+       "en": "Madam, it's urgent. Just the fee and the parcel goes out today.",
+       "uk": "Пані, це терміново. Лише збір, і посилку відправлять сьогодні."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Pues apunte: la tarjeta es la verde. O la azul. Tengo dos y no sé cuál es cuál."
+       "es": "Pues apunte: la tarjeta es la verde. O la azul. Tengo dos y no sé cuál es cuál.",
+       "en": "Well, write this down: the card is the green one. Or the blue one. I've got two and I can't tell which is which.",
+       "uk": "Тоді записуйте: картка зелена. Або синя. У мене дві, і я не знаю, яка є яка."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Los números, señora. Da igual el color."
+       "es": "Los números, señora. Da igual el color.",
+       "en": "The numbers, madam. The colour doesn't matter.",
+       "uk": "Номер, пані. Колір не важливий."
       }
      }
     ]
@@ -154,13 +194,17 @@ window.CALLS_EXTRA = {
   "beats": [
    {
     "say": {
-     "es": "¿Manolo? ¿Qué Manolo, señora? Dígame quién es."
+     "es": "¿Manolo? ¿Qué Manolo, señora? Dígame quién es.",
+     "en": "Manolo? What Manolo, madam? Tell me who he is.",
+     "uk": "Маноло? Який Маноло, пані? Скажіть, хто це."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Mi nieto. El policía."
+       "es": "Mi nieto. El policía.",
+       "en": "My grandson. The policeman.",
+       "uk": "Мій онук. Поліцейський."
       },
       "pat": 0,
       "sus": 0,
@@ -170,25 +214,33 @@ window.CALLS_EXTRA = {
      {
       "k": "d",
       "text": {
-       "es": "Manolo es el que me arregla el grifo. Muy apañado. ¿Lo conoce?"
+       "es": "Manolo es el que me arregla el grifo. Muy apañado. ¿Lo conoce?",
+       "en": "Manolo's the one who fixes my tap. Very handy. Do you know him?",
+       "uk": "Маноло — це той, що лагодить мені кран. Золоті руки. Знаєте його?"
       },
       "pat": -15,
       "sus": 10,
       "time": 30,
       "react": {
-       "es": "No, señora. La tasa, por favor."
+       "es": "No, señora. La tasa, por favor.",
+       "en": "No, madam. The fee, please.",
+       "uk": "Ні, пані. Збір, будь ласка."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Bueno, le pago la tasa. ¿Le va bien en sellos? Tengo muchos."
+       "es": "Bueno, le pago la tasa. ¿Le va bien en sellos? Tengo muchos.",
+       "en": "Fine, I'll pay the fee. Is stamps all right? I've got loads.",
+       "uk": "Гаразд, сплачу збір. Марками можна? У мене їх багато."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Sellos no. Tarjeta."
+       "es": "Sellos no. Tarjeta.",
+       "en": "Not stamps. A card.",
+       "uk": "Не марками. Карткою."
       }
      }
     ]
@@ -207,43 +259,57 @@ window.CALLS_EXTRA = {
   "openings": [
    {
     "say": {
-     "es": "Señora, tenemos a su hija. Si quiere volver a verla, pague ahora mismo."
+     "es": "Señora, tenemos a su hija. Si quiere volver a verla, pague ahora mismo.",
+     "en": "Madam, we have your daughter. If you want to see her again, pay right now.",
+     "uk": "Пані, ваша донька в нас. Якщо хочете її ще побачити, платіть негайно."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "¿A mi hija? Ay, hijo, quédesela una semana. Que me sale muy cara."
+       "es": "¿A mi hija? Ay, hijo, quédesela una semana. Que me sale muy cara.",
+       "en": "My daughter? Oh, love, keep her for a week. She costs me a fortune.",
+       "uk": "Моя донька? Ой, синку, залиште її собі на тиждень. Вона мені дуже дорого обходиться."
       },
       "pat": -5,
       "sus": 10,
       "time": 20,
       "react": {
-       "es": "…Señora, esto va en serio."
+       "es": "…Señora, esto va en serio.",
+       "en": "…Madam, this is serious.",
+       "uk": "…Пані, це серйозно."
       }
      },
      {
       "k": "d",
       "text": {
-       "es": "Ay, Dios mío. Espere, que me siento. ¿Está bien? ¿Ha comido?"
+       "es": "Ay, Dios mío. Espere, que me siento. ¿Está bien? ¿Ha comido?",
+       "en": "Oh my God. Hold on, let me sit down. Is she all right? Has she eaten?",
+       "uk": "Боже мій. Зачекайте, я сяду. З нею все гаразд? Вона їла?"
       },
       "pat": -10,
       "sus": 0,
       "time": 30,
       "react": {
-       "es": "Señora, el dinero. Ahora."
+       "es": "Señora, el dinero. Ahora.",
+       "en": "Madam, the money. Now.",
+       "uk": "Пані, гроші. Зараз."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Le pago, claro. ¿Le va bien un cheque? Los mando por correo certificado."
+       "es": "Le pago, claro. ¿Le va bien un cheque? Los mando por correo certificado.",
+       "en": "I'll pay, of course. Is a cheque all right? I'll send it by recorded post.",
+       "uk": "Звісно, заплачу. Чек підійде? Надішлю рекомендованим листом."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Nada de cheques. Transferencia, ya."
+       "es": "Nada de cheques. Transferencia, ya.",
+       "en": "No cheques. A bank transfer, now.",
+       "uk": "Жодних чеків. Переказ, негайно."
       }
      }
     ]
@@ -252,13 +318,17 @@ window.CALLS_EXTRA = {
   "beats": [
    {
     "say": {
-     "es": "Señora, esto va muy en serio. Pague, o no la vuelve a ver."
+     "es": "Señora, esto va muy en serio. Pague, o no la vuelve a ver.",
+     "en": "Madam, this is very serious. Pay, or you'll never see her again.",
+     "uk": "Пані, це дуже серйозно. Платіть, або більше її не побачите."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Y yo. Devuélvala antes de las nueve, que viene Manolo a cenar. El policía."
+       "es": "Y yo. Devuélvala antes de las nueve, que viene Manolo a cenar. El policía.",
+       "en": "So am I. Bring her back before nine, Manolo's coming for dinner. The policeman.",
+       "uk": "Я теж серйозно. Поверніть її до дев’ятої, бо Маноло прийде вечеряти. Поліцейський."
       },
       "pat": 0,
       "sus": 0,
@@ -268,25 +338,33 @@ window.CALLS_EXTRA = {
      {
       "k": "d",
       "text": {
-       "es": "Pues si va en serio, dígale que se abrigue, que por las noches refresca."
+       "es": "Pues si va en serio, dígale que se abrigue, que por las noches refresca.",
+       "en": "Well, if it's serious, tell her to wrap up warm, it gets chilly at night.",
+       "uk": "Ну, якщо серйозно, то скажіть їй одягтися тепліше, бо вночі прохолодно."
       },
       "pat": -15,
       "sus": 10,
       "time": 30,
       "react": {
-       "es": "¡¡Señora!!"
+       "es": "¡¡Señora!!",
+       "en": "Madam!!",
+       "uk": "Пані!!"
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Transferencia, vale. ¿A nombre de quién? Que el banco me lo pregunta."
+       "es": "Transferencia, vale. ¿A nombre de quién? Que el banco me lo pregunta.",
+       "en": "A transfer, fine. In whose name? The bank always asks me.",
+       "uk": "Переказ, добре. На чиє ім’я? Банк мене про це питає."
       },
       "pat": 10,
       "sus": 10,
       "time": 20,
       "react": {
-       "es": "…A nombre de… de la empresa. Mándelo y ya."
+       "es": "…A nombre de… de la empresa. Mándelo y ya.",
+       "en": "…In the name of… of the company. Just send it.",
+       "uk": "…На ім’я… фірми. Просто надішліть."
       }
      }
     ]
@@ -305,43 +383,57 @@ window.CALLS_EXTRA = {
   "openings": [
    {
     "say": {
-     "es": "Señora, le habla la Policía Nacional. Su cuenta está en peligro. Necesito el número de su tarjeta."
+     "es": "Señora, le habla la Policía Nacional. Su cuenta está en peligro. Necesito el número de su tarjeta.",
+     "en": "Madam, this is the National Police. Your account is in danger. I need your card number.",
+     "uk": "Пані, вас турбує Національна поліція. Ваш рахунок під загрозою. Мені потрібен номер вашої картки."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "¡Manolo! Dice el señor que es compañero tuyo. Ponte."
+       "es": "¡Manolo! Dice el señor que es compañero tuyo. Ponte.",
+       "en": "Manolo! This gentleman says he's a colleague of yours. Come to the phone.",
+       "uk": "Маноло! Пан каже, що він твій колега. Підійди."
       },
       "pat": -5,
       "sus": 10,
       "time": 20,
       "react": {
-       "es": "…¿Quién es Manolo?"
+       "es": "…¿Quién es Manolo?",
+       "en": "…Who's Manolo?",
+       "uk": "…Хто такий Маноло?"
       }
      },
      {
       "k": "d",
       "text": {
-       "es": "Ay, la policía. Espere un momento, que apago la olla, que se me pega el guiso."
+       "es": "Ay, la policía. Espere un momento, que apago la olla, que se me pega el guiso.",
+       "en": "Oh, the police. Wait a moment, I'll turn off the pot, the stew's sticking.",
+       "uk": "Ой, поліція. Хвилинку, я вимкну каструлю, бо рагу пригорає."
       },
       "pat": -10,
       "sus": 0,
       "time": 35,
       "react": {
-       "es": "Señora, no cuelgue. Su cuenta está en peligro."
+       "es": "Señora, no cuelgue. Su cuenta está en peligro.",
+       "en": "Madam, don't hang up. Your account is in danger.",
+       "uk": "Пані, не кладіть слухавку. Ваш рахунок під загрозою."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Mi tarjeta termina en cuatro… cuatro… ¿o era siete? La tengo en el bolso."
+       "es": "Mi tarjeta termina en cuatro… cuatro… ¿o era siete? La tengo en el bolso.",
+       "en": "My card ends in four… four… or was it seven? It's in my handbag.",
+       "uk": "Моя картка закінчується на чотири… чотири… чи сім? Вона в сумці."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Los dieciséis números, señora. Todos."
+       "es": "Los dieciséis números, señora. Todos.",
+       "en": "All sixteen digits, madam. All of them.",
+       "uk": "Усі шістнадцять цифр, пані. Усі."
       }
      }
     ]
@@ -350,13 +442,17 @@ window.CALLS_EXTRA = {
   "beats": [
    {
     "say": {
-     "es": "Señora, ¿quién es Manolo? Le hablo yo personalmente."
+     "es": "Señora, ¿quién es Manolo? Le hablo yo personalmente.",
+     "en": "Madam, who is Manolo? I'm speaking to you personally.",
+     "uk": "Пані, хто такий Маноло? Я говорю з вами особисто."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Mi nieto. El policía."
+       "es": "Mi nieto. El policía.",
+       "en": "My grandson. The policeman.",
+       "uk": "Мій онук. Поліцейський."
       },
       "pat": 0,
       "sus": 0,
@@ -366,25 +462,33 @@ window.CALLS_EXTRA = {
      {
       "k": "d",
       "text": {
-       "es": "Manolo es el que viene a comer los domingos. Hoy ha venido entre semana, qué raro."
+       "es": "Manolo es el que viene a comer los domingos. Hoy ha venido entre semana, qué raro.",
+       "en": "Manolo's the one who comes for lunch on Sundays. Today he came midweek, how odd.",
+       "uk": "Маноло приходить обідати по неділях. А сьогодні прийшов посеред тижня, дивно."
       },
       "pat": -15,
       "sus": 10,
       "time": 30,
       "react": {
-       "es": "Señora, por favor. Es un asunto oficial."
+       "es": "Señora, por favor. Es un asunto oficial.",
+       "en": "Madam, please. This is an official matter.",
+       "uk": "Пані, будь ласка. Це офіційна справа."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Vale, le doy la tarjeta. Pero la del supermercado, que la del banco la tengo bloqueada."
+       "es": "Vale, le doy la tarjeta. Pero la del supermercado, que la del banco la tengo bloqueada.",
+       "en": "Fine, I'll give you the card. The supermarket one, though, the bank one's blocked.",
+       "uk": "Добре, дам вам картку. Але з супермаркету, бо банківська заблокована."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "La del banco, señora."
+       "es": "La del banco, señora.",
+       "en": "The bank one, madam.",
+       "uk": "Банківську, пані."
       }
      }
     ]
@@ -403,43 +507,57 @@ window.CALLS_EXTRA = {
   "openings": [
    {
     "say": {
-     "es": "Abuela, soy yo. He chocado un coche que no es mío. Necesito dinero ya, o me detienen."
+     "es": "Abuela, soy yo. He chocado un coche que no es mío. Necesito dinero ya, o me detienen.",
+     "en": "Grandma, it's me. I crashed into a car that isn't mine. I need money now or they'll arrest me.",
+     "uk": "Бабусю, це я. Я розбив чужу машину. Мені терміново потрібні гроші, бо мене заарештують."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Ay, hijo. ¿Y has comido? Por teléfono se te oye flaquito."
+       "es": "Ay, hijo. ¿Y has comido? Por teléfono se te oye flaquito.",
+       "en": "Oh, love. And have you eaten? You sound so skinny on the phone.",
+       "uk": "Ой, синку. А ти їв? По телефону ти якийсь худенький."
       },
       "pat": -5,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Abuela, ahora no, por favor. El dinero."
+       "es": "Abuela, ahora no, por favor. El dinero.",
+       "en": "Grandma, not now, please. The money.",
+       "uk": "Бабусю, не зараз, будь ласка. Гроші."
       }
      },
      {
       "k": "d",
       "text": {
-       "es": "Ay, hijo. ¿Y el otro coche? ¿Era de alguien conocido? ¿Del vecino?"
+       "es": "Ay, hijo. ¿Y el otro coche? ¿Era de alguien conocido? ¿Del vecino?",
+       "en": "Oh, love. And the other car? Was it someone we know? The neighbour's?",
+       "uk": "Ой, синку. А та друга машина? Чия? Когось знайомого? Сусіда?"
       },
       "pat": -10,
       "sus": 0,
       "time": 30,
       "react": {
-       "es": "No lo sé, abuela. Da igual. Me van a detener."
+       "es": "No lo sé, abuela. Da igual. Me van a detener.",
+       "en": "I don't know, Grandma. It doesn't matter. They're going to arrest me.",
+       "uk": "Не знаю, бабусю. Неважливо. Мене заарештують."
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Claro. Te lo mando. ¿Tu cuenta sigue siendo la del banco de la plaza?"
+       "es": "Claro. Te lo mando. ¿Tu cuenta sigue siendo la del banco de la plaza?",
+       "en": "Of course. I'll send it. Is your account still the one at the bank on the square?",
+       "uk": "Звісно. Перекажу. Твій рахунок досі в банку на площі?"
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Sí. Dime los números, que te lo confirmo."
+       "es": "Sí. Dime los números, que te lo confirmo.",
+       "en": "Yes. Read me the numbers and I'll confirm.",
+       "uk": "Так. Продиктуй цифри, я підтверджу."
       }
      }
     ]
@@ -448,13 +566,17 @@ window.CALLS_EXTRA = {
   "beats": [
    {
     "say": {
-     "es": "Abuela, me van a detener. ¿Me mandas el dinero o no?"
+     "es": "Abuela, me van a detener. ¿Me mandas el dinero o no?",
+     "en": "Grandma, they're going to arrest me. Are you sending the money or not?",
+     "uk": "Бабусю, мене заарештують. Ти надішлеш гроші чи ні?"
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Tranquilo, que Manolo te lleva una tortilla a la comisaría. Ya sabes, el policía."
+       "es": "Tranquilo, que Manolo te lleva una tortilla a la comisaría. Ya sabes, el policía.",
+       "en": "Don't worry, Manolo will bring you a Spanish omelette at the station. You know, the policeman.",
+       "uk": "Не хвилюйся, Маноло принесе тобі тортилью у відділок. Ну, ти знаєш, поліцейський."
       },
       "pat": 0,
       "sus": 0,
@@ -464,25 +586,33 @@ window.CALLS_EXTRA = {
      {
       "k": "d",
       "text": {
-       "es": "Que te detengan un rato no te vendrá mal, hijo. Así no corres."
+       "es": "Que te detengan un rato no te vendrá mal, hijo. Así no corres.",
+       "en": "A little time in a cell won't do you any harm, love. Maybe then you'll slow down.",
+       "uk": "Трохи посидиш — тобі не зашкодить, синку. Може, перестанеш ганяти."
       },
       "pat": -15,
       "sus": 10,
       "time": 30,
       "react": {
-       "es": "¡Abuela!"
+       "es": "¡Abuela!",
+       "en": "Grandma!",
+       "uk": "Бабусю!"
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Te mando doscientos. ¿O eran dos mil? Es que no veo bien el papel."
+       "es": "Te mando doscientos. ¿O eran dos mil? Es que no veo bien el papel.",
+       "en": "I'll send you two hundred. Or was it two thousand? I can't read the paper properly.",
+       "uk": "Надішлю двісті. Чи дві тисячі? Я погано бачу папірець."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "Dos mil, abuela. Dos mil."
+       "es": "Dos mil, abuela. Dos mil.",
+       "en": "Two thousand, Grandma. Two thousand.",
+       "uk": "Дві тисячі, бабусю. Дві тисячі."
       }
      }
     ]
@@ -501,43 +631,57 @@ window.CALLS_EXTRA = {
   "openings": [
    {
     "say": {
-     "es": "Centro de atención, ¿dígame?"
+     "es": "Centro de atención, ¿dígame?",
+     "en": "Customer service, how can I help?",
+     "uk": "Служба підтримки, слухаю?"
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Hola, hijo. Soy la abuela de ayer. Me quedé con una duda de lo del pin… ¿tienes un ratito?"
+       "es": "Hola, hijo. Soy la abuela de ayer. Me quedé con una duda de lo del pin… ¿tienes un ratito?",
+       "en": "Hello, love. It's the grandma from yesterday. I still had a question about the PIN… have you got a minute?",
+       "uk": "Привіт, синку. Це бабуся, що вчора дзвонила. Я не все зрозуміла про пін-код… маєш хвилинку?"
       },
       "pat": -5,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "…Señora, por favor, no vuelva a llamar."
+       "es": "…Señora, por favor, no vuelva a llamar.",
+       "en": "…Madam, please, don't call again.",
+       "uk": "…Пані, будь ласка, більше не дзвоніть."
       }
      },
      {
       "k": "d",
       "text": {
-       "es": "Hola, hijo. ¿Tú eres el del banco o el de la luz? Es que me suenas."
+       "es": "Hola, hijo. ¿Tú eres el del banco o el de la luz? Es que me suenas.",
+       "en": "Hello, love. Are you the one from the bank or the one from the electricity? You sound familiar.",
+       "uk": "Привіт, синку. Ти з банку чи з електрики? Голос знайомий."
       },
       "pat": -10,
       "sus": 5,
       "time": 30,
       "react": {
-       "es": "Señora, esto es un centro de atención. ¿Qué quiere?"
+       "es": "Señora, esto es un centro de atención. ¿Qué quiere?",
+       "en": "Madam, this is a customer service centre. What do you want?",
+       "uk": "Пані, це служба підтримки. Що вам треба?"
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Mira, tengo la tarjeta aquí delante y no sé si leerte los números a ti o al otro."
+       "es": "Mira, tengo la tarjeta aquí delante y no sé si leerte los números a ti o al otro.",
+       "en": "Look, I've got the card right here and I don't know whether to read the numbers to you or to the other one.",
+       "uk": "Слухай, картка в мене тут, і я не знаю, кому диктувати цифри: тобі чи тому, іншому."
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "…A mí, señora. A mí."
+       "es": "…A mí, señora. A mí.",
+       "en": "…To me, madam. To me.",
+       "uk": "…Мені, пані. Мені."
       }
      }
     ]
@@ -546,13 +690,17 @@ window.CALLS_EXTRA = {
   "beats": [
    {
     "say": {
-     "es": "Señora, le repito: no vuelva a llamar a este número."
+     "es": "Señora, le repito: no vuelva a llamar a este número.",
+     "en": "Madam, I repeat: do not call this number again.",
+     "uk": "Пані, повторюю: більше не дзвоніть на цей номер."
     },
     "cards": [
      {
       "k": "p",
       "text": {
-       "es": "Es que te puse en marcación rápida. Eres el uno. El dos es Manolo."
+       "es": "Es que te puse en marcación rápida. Eres el uno. El dos es Manolo.",
+       "en": "I put you on speed dial. You're number one. Number two is Manolo.",
+       "uk": "Я записала тебе на швидкий набір. Ти — одиничка. Двійка — Маноло."
       },
       "pat": 0,
       "sus": 0,
@@ -562,25 +710,33 @@ window.CALLS_EXTRA = {
      {
       "k": "d",
       "text": {
-       "es": "Es que mi nieto me dijo que si me llaman raro, que los llame yo. Para que les salga caro."
+       "es": "Es que mi nieto me dijo que si me llaman raro, que los llame yo. Para que les salga caro.",
+       "en": "My grandson said if anyone calls me funny, I should call them back. So it costs them.",
+       "uk": "Онук сказав: якщо дзвонять дивні, передзвонюй їм сама. Хай і їм дорого обійдеться."
       },
       "pat": -15,
       "sus": 10,
       "time": 30,
       "react": {
-       "es": "¡¡Señora, cuelgue!!"
+       "es": "¡¡Señora, cuelgue!!",
+       "en": "Madam, hang up!!",
+       "uk": "Пані, кладіть слухавку!!"
       }
      },
      {
       "k": "f",
       "text": {
-       "es": "Vale, te cuelgo. Pero apunta mi número, por si acaso: nueve, nueve… ¿o seis?"
+       "es": "Vale, te cuelgo. Pero apunta mi número, por si acaso: nueve, nueve… ¿o seis?",
+       "en": "All right, I'll hang up. But write down my number, just in case: nine, nine… or six?",
+       "uk": "Добре, кладу. Але запиши мій номер, про всяк випадок: дев’ять, дев’ять… чи шість?"
       },
       "pat": 10,
       "sus": 5,
       "time": 20,
       "react": {
-       "es": "No quiero su número."
+       "es": "No quiero su número.",
+       "en": "I don't want your number.",
+       "uk": "Мені не треба ваш номер."
       }
      }
     ]

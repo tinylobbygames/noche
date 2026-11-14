@@ -104,7 +104,8 @@
   .help-box b { color: var(--amber); }
   .help-box .btn { align-self: center; margin-top: 4px; }
   .help-box .support { color: var(--muted); font-size: 14px; line-height: 1.45; border-top: 1px solid #3a2f42; padding-top: 12px; margin: 4px 0 0; }
-  #end .real { color: var(--ink); font-size: 15px; background: #16241c; border-left: 4px solid #5fd08a; border-radius: 8px; padding: 8px 12px; max-width: 360px; }
+  #title .learn { color: #5fd08a; font-size: 14px; font-weight: 600; margin: 6px auto 0; max-width: 340px; }
+#end .real { color: var(--ink); font-size: 15px; background: #16241c; border-left: 4px solid #5fd08a; border-radius: 8px; padding: 8px 12px; max-width: 360px; }
   #end .real b { color: #5fd08a; }
   #end .tip { color: var(--ink); font-size: 14px; background: #221a28; border-left: 4px solid var(--amber); border-radius: 8px; padding: 8px 12px; max-width: 360px; }
   #toast { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); background: var(--amber); color: #1a1008; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 9; }
@@ -145,6 +146,7 @@
     <h1>LA ABUELA</h1>
     <p data-t="slogan"></p>
     <div class="how" data-t="how"></div>
+    <p class="learn" data-t="learn"></p>
     <div class="how" id="who"></div>
     <div id="calls"></div>
     <button class="btn ring" id="answer"></button>
@@ -228,6 +230,7 @@ const REAL = {
   llama: { es: 'prisa, secreto, dinero y códigos: si salen los cuatro, es estafa.', en: 'hurry, secrecy, money and codes: all four together means a scam.', uk: 'поспіх, таємниця, гроші й коди: якщо є всі чотири — це шахрайство.' },
 };
 const UI = {
+  learn: { es: 'Siete estafas reales. Aprende a reconocerlas riéndote.', en: 'Seven real scams. Learn to spot them while laughing.', uk: 'Сім справжніх шахрайств. Навчися їх розпізнавати, сміючись.' },
   slogan: { es: 'Tu trabajo es no colgar.', en: 'Your job is not to hang up.', uk: 'Твоя робота — не класти слухавку.' },
   how: { es: 'Te llama un estafador. No le des nada de verdad. Cada minuto que pierde contigo es un minuto que no roba a nadie.',
          en: 'A scammer is calling. Give him nothing real. Every minute he wastes on you is a minute he is not robbing anyone.',

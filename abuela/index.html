@@ -110,6 +110,8 @@
   #end .tip { color: var(--ink); font-size: 14px; background: #221a28; border-left: 4px solid var(--amber); border-radius: 8px; padding: 8px 12px; max-width: 360px; }
   #toast { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); background: var(--amber); color: #1a1008; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 9; }
   #toast.on { opacity: 1; }
+  #toast { max-width: min(90vw, 460px); text-align: center; }
+  #end-text .why { display: block; margin-bottom: 6px; color: var(--amber); }
 
   /* ---------- ending ---------- */
   #end { flex: 1; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 18px; gap: 14px; }
@@ -280,6 +282,8 @@ const UI = {
   again: { es: '📞 Otra llamada', en: '📞 Another call', uk: '📞 Ще дзвінок' },
   share: { es: 'Enviar a un amigo', en: 'Send to a friend', uk: 'Надіслати другові' },
   // 01.11 (GAME_PLAN §3–4): shareable result, WhatsApp for the 45+ audience, donation asked after the win
+  hintPat: { es: 'Paciencia del estafador: baja cuando le haces perder el tiempo. Si llega a cero, cuelga él, y eso es ganar.', en: "Scammer's patience: it drops as you waste his time. At zero he hangs up, and that's a win.", uk: 'Терпіння шахрая: падає, коли ти марнуєш його час. На нулі він кладе слухавку, і це перемога.' },
+  hintSus: { es: 'Sospecha: sube cuando preguntas mucho. Si se llena, te descubre. Mezcla preguntas con excusas.', en: 'Suspicion: it rises when you ask a lot. If it fills up, he catches on. Mix questions with excuses.', uk: 'Підозра: росте, коли багато питаєш. Якщо заповниться, він тебе розкусить. Чергуй запитання з відмовками.' },
   stolenMin: { es: '¡Le has robado ${m} min al estafador!', en: "You've stolen ${m} min from the scammer!", uk: 'Ти вкрав у шахрая ${m} хв!' },
   waBtn: { es: '👵 Mándaselo a tu abuela', en: '👵 Send it to your grandma', uk: '👵 Надішли своїй бабусі' },
   shareResult: { es: 'Aguanté ${t} al estafador 👵📱 ¿Tú cuánto aguantarías? Juega gratis:', en: 'I kept the scammer on the line for ${t} 👵📱 How long would you last? Play free:', uk: 'Я протримав шахрая ${t} 👵📱 А ти скільки? Грай безкоштовно:' },
@@ -390,12 +394,15 @@ const BEATS = [
 
 const ENDINGS = {
   hangup: { t: { es: 'COLGÓ ÉL', en: 'HE HUNG UP', uk: 'ВІН ПОКЛАВ СЛУХАВКУ' },
+            why: { es: '¡Ganaste! Su paciencia llegó a cero y colgó él.', en: 'You won! His patience hit zero, so he hung up.', uk: 'Ти виграла! Його терпіння впало до нуля, і він поклав слухавку.' },
             text: { es: 'Pi… pi… pi. Se le acabó la paciencia. Ese rato no se lo ha robado a nadie.', en: 'Beep… beep… beep. He ran out of patience. That time, he robbed no one.', uk: 'Пі… пі… пі. Терпець йому урвався. Цей час він ні в кого не вкрав.' } },
   outlasted: { t: { es: 'COLGÓ ÉL', en: 'HE HUNG UP', uk: 'ВІН ПОКЛАВ СЛУХАВКУ' },
+            why: { es: '¡Ganaste! Aguantaste toda la llamada sin darle nada.', en: 'You won! You lasted the whole call and gave him nothing.', uk: 'Ти виграла! Протрималася весь дзвінок і нічого йому не дала.' },
             text: { es: 'Veinte minutos después seguía al teléfono. Al final colgó él, sin los números y sin el código.', en: 'Twenty minutes later he was still on the line. In the end he hung up, without the numbers and without the code.', uk: 'Через двадцять хвилин він досі був на лінії. Зрештою поклав слухавку сам — без цифр і без коду.' } },
   manolo: { t: { es: 'MANOLO SE PONE', en: 'MANOLO PICKS UP', uk: 'МАНОЛО БЕРЕ СЛУХАВКУ' },
             text: { es: '«Guardia Civil, dígame.» Tres segundos de silencio. Pi, pi, pi. Nombre, ciudad y cuenta: con eso Manolo abre una denuncia de verdad. Ese número no vuelve a sonar.', en: '"Police, go ahead." Three seconds of silence. Beep, beep, beep. Name, city and account: with that, Manolo files a real report. That number never rings again.', uk: '«Поліція, слухаю.» Три секунди тиші. Пі, пі, пі. Ім’я, місто і рахунок: з цим Маноло відкриває справжню справу. Цей номер більше не дзвонить.' } },
   caught: { t: { es: 'TE HA CALADO', en: 'HE SAW THROUGH YOU', uk: 'ВІН ТЕБЕ РОЗКУСИВ' }, bad: true,
+            why: { es: 'Su sospecha se llenó: demasiadas preguntas y se dio cuenta.', en: 'His suspicion bar filled up: too many questions, and he caught on.', uk: 'Його підозра заповнилася: забагато запитань, і він здогадався.' },
             text: { es: '«Señora, se acabó. Sabemos dónde vive.» Cuelga él. Mañana llamará otro, con otra voz y la misma historia. Esta vez no se ha llevado nada.', en: '"Madam, we\'re done. We know where you live." He hangs up. Tomorrow another one will call, with another voice and the same story. This time he took nothing.', uk: '«Сеньйоро, досить. Ми знаємо, де ви живете.» Він кладе слухавку. Завтра подзвонить інший, з іншим голосом і тією ж історією. Цього разу він не взяв нічого.' } },
   trap: { t: { es: 'LE DISTE ALGO DE VERDAD', en: 'YOU GAVE HIM SOMETHING REAL', uk: 'ТИ ДАЛА ЙОМУ СПРАВЖНЄ' }, bad: true,
             text: { es: 'Eran los números de verdad. Dos mil euros menos en la cuenta, y el estafador ya está llamando a la siguiente abuela.', en: 'Those were the real numbers. Two thousand euros gone from the account, and the scammer is already calling the next grandma.', uk: 'Це були справжні цифри. Мінус дві тисячі євро з рахунку, а шахрай уже дзвонить наступній бабусі.' } },
@@ -471,7 +478,9 @@ function show(who, text, more) {
   const b = $('bubble'); b.dataset.who = T(UI[who]); b.innerHTML = T(text).split(/(\s+)/).map((w) => /\S/.test(w) ? `<span class="w">${w.replace(/</g, '&lt;')}</span>` : w).join('');
 }
 let toastT;
-function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 1800); }
+function toast(msg, ms) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), ms || 1800); }
+// 24.11 (Darius256, Playtest Jam): players didn't know what the bars mean or why the call dropped → one hint per bar, the first time it moves
+function barHint(key) { try { if (localStorage.getItem('abuela_hint_' + key)) return false; localStorage.setItem('abuela_hint_' + key, '1'); } catch {} toast(T(UI[key]), 4500); return true; }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 // 25.10: reactions went by too fast to read. Reading time grows with the text; a tap on the bubble or Enter skips the wait.
 // Voice: vo/<lang>/<djb2 of the line>.mp3 (made by tools/abuela_vo.py). A missing file is fine: the line is read instead.
@@ -568,7 +577,8 @@ async function play(c) {
   if (c.manolo) { await wait(1400); return ending('manolo'); }
   if (c.end) { await wait(1400); return ending(c.end); }   // build B: the punch card of a Shorts call ends it
   const t0 = S.time; S.time += c.time; S.pat += c.pat; S.sus += c.sus;
-  if (Math.floor(S.time / 60) > Math.floor(t0 / 60)) setTimeout(() => toast(T(UI.stolenMin).replace('${m}', Math.floor(S.time / 60))), 900);
+  const hinted = (c.pat < 0 && barHint('hintPat')) || (c.sus > 0 && barHint('hintSus'));
+  if (!hinted && Math.floor(S.time / 60) > Math.floor(t0 / 60)) setTimeout(() => toast(T(UI.stolenMin).replace('${m}', Math.floor(S.time / 60))), 900);
   if (c.flag) S.flags[c.flag] = true;
   await tick(t0, S.time); hud(); await spoke;
   if (c.clue && !S.clues.includes(c.clue)) { S.clues.push(c.clue); hud(); toast(T(UI.clueNoted) + T(CLUES[c.clue])); await wait(900); }
@@ -596,6 +606,7 @@ function ending(kind) {
   $('end-img').src = kind === 'caught' ? 'art/jefe.png' : kind === 'trap' ? 'art/estafador.png' : 'art/abuela.png'; $('end-img').className = e.bad ? 'bad' : '';
   $('end-time').textContent = kind === 'trap' ? '−2000 €' : fmt(S.time);
   $('end-text').textContent = T(e.text);
+  if (e.why) { const w = document.createElement('b'); w.className = 'why'; w.textContent = T(e.why) + ' '; $('end-text').prepend(w); }   // 24.11: say plainly why the call ended and whether it's a win
   $('end-clues').textContent = S.clues.length ? T(UI.clues) + S.clues.map((c) => T(CLUES[c])).join(' · ') : T(UI.noClues);
   const tip = kind === 'manolo' ? UI.tipManolo : kind === 'trap' ? UI.tipTrap : kind === 'caught' ? UI.tipCaught : S.clues.length === 3 ? UI.tipManoloNext : UI.tipClues;
   $('end-tip').textContent = T(tip).replace('${n}', 3 - S.clues.length);
